@@ -12,7 +12,6 @@ Currently, the full-stack for this website is being developed entirely by me, Ga
   - [Readings](#readings)
   - [Flashcards](#flashcards)
   - [Planned Features](#planned-features)
-- [Personal Motivation](#personal-motivation)
 - [Tech Stack Overview](#tech-stack-overview)
 - [Project Directory Structure](#project-directory-structure)
 - [Copyright Resources](#copyright-resources)
