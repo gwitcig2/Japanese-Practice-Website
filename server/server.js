@@ -28,4 +28,8 @@ mongoose.connect(process.env.MONGO_URI)
 app.use("/reading", readingRouter);
 app.use("/auth", authRouter);
 
-app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+export default app;
+
+if (process.env.NODE_ENV === "development") {
+    app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+}
