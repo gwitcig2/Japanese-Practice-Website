@@ -1,7 +1,7 @@
 import express from "express";
 import {signupUser} from "../services/auth/signupUser.js";
 import {loginUser} from "../services/auth/loginUser.js";
-import {deleteUser} from "../services/auth/deleteUser.js";
+import {deleteUser, authenticateToken} from "../services/auth/deleteUser.js";
 
 const authRouter = express.Router();
 
@@ -31,8 +31,11 @@ authRouter.post("/login", async (req, res) => {
     }
 });
 
-authRouter.delete("/delete", async (req, res) => {
+authRouter.delete("/account/:id", authenticateToken, async (req, res) => {
     try {
+        if (req.user.userId !== req.params.id) {
+            return res.status(403).json({ error: "Unauthorized." });
+        }
         const result = await deleteUser(req.params.id);
         res.status(200).json(result);
     } catch (err) {

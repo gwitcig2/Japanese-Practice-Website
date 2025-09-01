@@ -2,8 +2,6 @@ import User from "../../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const JWT_KEY = process.env.JWT_KEY;
-
 /**
  * Processes a user's login request via finding their account and comparing passwords.
  *
@@ -24,7 +22,7 @@ export async function loginUser(email, password) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new Error("Invalid password");
 
-    const token = jwt.sign({ userId: user._id}, JWT_KEY, { expiresIn: "1h"});
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_KEY, { expiresIn: "1h"});
     return { token };
 
 }

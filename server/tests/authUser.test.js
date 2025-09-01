@@ -11,8 +11,16 @@ const testUser = {
 };
 
 let jwtToken;
+let dbUser;
 
 afterAll(async () => {
+
+    if (dbUser) {
+
+        await User.findByIdAndDelete(dbUser._id);
+
+    }
+
    await mongoose.disconnect();
 });
 
@@ -28,9 +36,8 @@ describe("User authentication routes", () => {
         expect(res.body).toHaveProperty("id");
         expect(res.body).toHaveProperty("email");
 
-        const user = await User.findOne({ email: testUser.email });
-        expect(user).toBeDefined();
-        console.log(user);
+        dbUser = await User.findOne({ email: testUser.email });
+        expect(dbUser).toBeDefined();
 
     });
 
@@ -42,23 +49,47 @@ describe("User authentication routes", () => {
             .expect(200);
 
         expect(res.body).toHaveProperty("token");
+
         jwtToken = res.body.token;
 
-        console.log(jwtToken);
+    });
+
+    test("Delete sends a 401 if no authorization is provided", async () => {
+
+        await request(app)
+           .delete(`/auth/account/${dbUser._id}`)
+           .expect(401);
+    });
+
+    test("Delete sends a 403 error when JWT authorization is invalid ", async () => {
+
+        await request(app)
+            .delete(`/auth/account/${dbUser._id}`)
+            .set("Authorization", `Bearer iamgoingtohackyouraccountnoob!!!`)
+            .expect(403);
+
+    });
+
+    test("Delete sends a 403 error if an authorized user tries deleting a different account", async () => {
+
+        await request(app)
+            .delete(`/auth/account/iamatotallylegitid`)
+            .set("Authorization", `Bearer ${jwtToken}`)
+            .expect(403);
 
     });
 
     test("Delete removes the test account", async () => {
 
         const res = await request(app)
-            .delete("/auth/delete")
+            .delete(`/auth/account/${dbUser._id}`)
             .set("Authorization", `Bearer ${jwtToken}`)
             .expect(200);
 
-        expect(res.body).toBe({ message: "Account deleted!" });
+        expect(res.body).toHaveProperty("message");
 
-        const user = await User.findOne({ email: testUser.email });
-        expect(user).toBeNull();
+        const userGone = await User.findOne({ email: testUser.email });
+        expect(userGone).toBeNull();
 
     });
 
