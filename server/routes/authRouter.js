@@ -9,8 +9,8 @@ const authRouter = express.Router();
 authRouter.post("/users", async (req, res) => {
 
     try {
-        const { email, password } = req.body;
-        const result = await createUser(email, password);
+        const { email, username, password } = req.body;
+        const result = await createUser(email, username, password);
         res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ error: `Account creation error: ${error.message}` });
@@ -20,8 +20,8 @@ authRouter.post("/users", async (req, res) => {
 
 authRouter.post("/sessions", async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const result = await loginUser(email, password);
+        const { email, username, password } = req.body;
+        const result = await loginUser(email, username, password);
         res.status(200).json(result);
     } catch (err) {
         res.status(401).json({ error: "Login failed", details: err.message });

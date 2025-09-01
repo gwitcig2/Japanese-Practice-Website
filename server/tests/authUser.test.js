@@ -5,6 +5,7 @@ import User from "../models/User.js";
 
 const testUser = {
     email: "iAmTest@example.com",
+    username: "theBestTester",
     password: "ThisIsMyPassword",
 };
 
@@ -30,10 +31,12 @@ describe("User authentication routes", () => {
             .expect(201);
 
         expect(res.body).toHaveProperty("id");
-        expect(res.body).toHaveProperty("email");
+        expect(res.body).toHaveProperty("username");
 
-        dbUser = await User.findOne({ email: testUser.email });
+        dbUser = await User.findOne({ username: testUser.username });
         expect(dbUser).toBeDefined();
+
+        console.log(dbUser);
 
     });
 
@@ -84,7 +87,7 @@ describe("User authentication routes", () => {
 
         expect(res.body).toHaveProperty("message");
 
-        const userGone = await User.findOne({ email: testUser.email });
+        const userGone = await User.findOne({ username: testUser.username });
         expect(userGone).toBeNull();
 
     });

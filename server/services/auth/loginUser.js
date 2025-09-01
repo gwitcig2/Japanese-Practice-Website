@@ -11,12 +11,18 @@ import jwt from "jsonwebtoken";
  * If no valid user is found OR the passwords don't match, throws an Error.
  *
  * @param email
+ * @param username
  * @param password
  * @returns {Promise<{token: (*)}>}
  */
-export async function loginUser(email, password) {
+export async function loginUser(email, username, password) {
 
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({
+        $or: [
+            { email: email },
+            { username: username }
+        ]
+    });
     if (!user) throw new Error("Could not find user");
 
     const isMatch = await bcrypt.compare(password, user.password);
