@@ -1,17 +1,16 @@
 import express from "express";
-import {signupUser} from "../services/auth/signupUser.js";
+import {createUser} from "../services/auth/createUser.js";
 import {loginUser} from "../services/auth/loginUser.js";
-import {deleteUser, authenticateToken} from "../services/auth/deleteUser.js";
+import {deleteUser} from "../services/auth/deleteUser.js";
+import {authenticateJWT} from "../services/auth/authenticateJWT.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/signup", async (req, res) => {
+authRouter.post("/users", async (req, res) => {
 
     try {
         const { email, password } = req.body;
-
-        const result = await signupUser(email, password);
-
+        const result = await createUser(email, password);
         res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ error: `Account creation error: ${error.message}` });
@@ -19,19 +18,17 @@ authRouter.post("/signup", async (req, res) => {
 
 });
 
-authRouter.post("/login", async (req, res) => {
+authRouter.post("/sessions", async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const result = await loginUser(email, password);
-
         res.status(200).json(result);
     } catch (err) {
         res.status(401).json({ error: "Login failed", details: err.message });
     }
 });
 
-authRouter.delete("/account/:id", authenticateToken, async (req, res) => {
+authRouter.delete("/users/:id", authenticateJWT, async (req, res) => {
     try {
         if (req.user.userId !== req.params.id) {
             return res.status(403).json({ error: "Unauthorized." });

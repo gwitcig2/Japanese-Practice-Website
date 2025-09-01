@@ -1,9 +1,7 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import app from "../server.js";
-// import bcrypt from "bcrypt";
 import User from "../models/User.js";
-// import User from "../models/User.js";
 
 const testUser = {
     email: "iAmTest@example.com",
@@ -16,9 +14,7 @@ let dbUser;
 afterAll(async () => {
 
     if (dbUser) {
-
         await User.findByIdAndDelete(dbUser._id);
-
     }
 
    await mongoose.disconnect();
@@ -29,7 +25,7 @@ describe("User authentication routes", () => {
     test("Signup route makes a new test user", async () => {
 
         const res = await request(app)
-            .post("/auth/signup")
+            .post("/auth/users")
             .send(testUser)
             .expect(201);
 
@@ -44,7 +40,7 @@ describe("User authentication routes", () => {
     test("Login route finds the newly created test account and returns a JWT", async () => {
 
         const res = await request(app)
-            .post("/auth/login")
+            .post("/auth/sessions")
             .send(testUser)
             .expect(200);
 
@@ -57,14 +53,14 @@ describe("User authentication routes", () => {
     test("Delete sends a 401 if no authorization is provided", async () => {
 
         await request(app)
-           .delete(`/auth/account/${dbUser._id}`)
+           .delete(`/auth/users/${dbUser._id}`)
            .expect(401);
     });
 
     test("Delete sends a 403 error when JWT authorization is invalid ", async () => {
 
         await request(app)
-            .delete(`/auth/account/${dbUser._id}`)
+            .delete(`/auth/users/${dbUser._id}`)
             .set("Authorization", `Bearer iamgoingtohackyouraccountnoob!!!`)
             .expect(403);
 
@@ -73,7 +69,7 @@ describe("User authentication routes", () => {
     test("Delete sends a 403 error if an authorized user tries deleting a different account", async () => {
 
         await request(app)
-            .delete(`/auth/account/iamatotallylegitid`)
+            .delete(`/auth/users/iamatotallylegitid`)
             .set("Authorization", `Bearer ${jwtToken}`)
             .expect(403);
 
@@ -82,7 +78,7 @@ describe("User authentication routes", () => {
     test("Delete removes the test account", async () => {
 
         const res = await request(app)
-            .delete(`/auth/account/${dbUser._id}`)
+            .delete(`/auth/users/${dbUser._id}`)
             .set("Authorization", `Bearer ${jwtToken}`)
             .expect(200);
 

@@ -13,7 +13,7 @@ import User from "../../models/User.js";
  * @param password
  * @returns {Promise<{id: unknown, email: *}>}
  */
-export async function signupUser(email, password) {
+export async function createUser(email, password) {
 
     const taken = await User.findOne({ email: email });
     if (taken) throw new Error("User already exists");
