@@ -73,6 +73,49 @@ This website is currently built on a MongoDB, Express, React and NodeJS (MERN) t
     - `/tests` - Unit tests for `/services` files and `/procedures` files, written with Jest.
     - `server.js` - Starts up the back-end Express server with CORS middleware, and connects to the MongoDB with `mongoose`.
 
+## API Overview
+
+### /auth sub-routes
+
+- POST /users -> Creates a new user
+- POST /sessions -> Login and creates JWT
+- DELETE /users/:id -> Removes a user (JWT authorization required)
+
+### /reading sub-routes
+
+- POST /setupReading -> Retrieves results of the setupReading pipeline function
+
+## Setup Instructions
+
+Clone the repo and install dependencies:
+
+```bash
+  git clone https://github.com/gwitcig2/Japanese-Practice-Website.git
+  npm install
+```
+
+Make your own `.env` variables if you don't have the real file:
+
+```env
+NODE_ENV=
+SERVER_PORT=
+VITE_CLIENT_PORT=
+JWT_KEY=
+VITE_API_READING=(routes to the request for the setupReading pipeline)
+CLIENT_ORIGIN=
+MONGO_URI=
+```
+Then run the project with just one command (starts up Vite and the Express server):
+
+```bash
+  npm run dev
+```
+
+Or run some specific unit tests with just one command:
+```bash
+  npm test -- /server/tests/*.test.js
+```
+
 ## Copyright Resources
 
 ### The Japanese Multilingual Dictionary (JMDict)

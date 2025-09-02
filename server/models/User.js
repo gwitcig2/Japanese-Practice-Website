@@ -1,8 +1,20 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    /**
+     * Unique email for a user. Can be used to login.
+     * Must follow the regex for emails.
+     */
     email: { type: String, required: true, unique: true },
+    /**
+     * Unique username for the user. Can be used to login.
+     * Development-wise it'd be used to make URLs look prettier.
+     * Can't have
+     */
     username: { type: String, required: true, unique: true },
+    /**
+     * Stores a user's password hashed with bcrypt.
+     */
     password: { type: String, required: true },
 }, { timestamps: true });
 

@@ -1,5 +1,14 @@
 import jwt from "jsonwebtoken";
 
+/**
+ *
+ * Authenticates the existence of a valid JSON web token that is given only to logged-in users.
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<*>}
+ */
 export async function authenticateJWT(req, res, next) {
 
     const authHeader = req.headers["authorization"];

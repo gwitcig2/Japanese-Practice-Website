@@ -3,6 +3,13 @@ import mongoose from 'mongoose';
 // import { queryGPT } from "../misc/queryGPT.js";
 import Paragraph from "../../models/Paragraph.js";
 
+/**
+ * Retrieves a random paragraph from the "Paragraphs" collection in the MongoDB.
+ * Currently hard-coded to retrieve N3-level paragraphs only, but will be refactored
+ * so that the user selects their estimated JLPT level.
+ *
+ * @returns {Promise<*>}
+ */
 export async function grabParagraphFromDB(/* params */) {
 
     const query = await Paragraph.aggregate([
