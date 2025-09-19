@@ -17,8 +17,8 @@ export async function createDeck(req, res) {
 
         const newDeck = new FlashcardDeck({
             name: name,
-            description: description,
-            user: req.user._id,
+            description: !description ?  "" : description,
+            user: req.user.userId,
         });
 
         await newDeck.save();
@@ -42,7 +42,7 @@ export async function createDeck(req, res) {
 export async function getDecks(req, res) {
 
     try {
-        const decks = await FlashcardDeck.find({ user: req.user._id })
+        const decks = await FlashcardDeck.find({ user: req.user.userId })
             .populate("flashcards");
 
         if (!decks) {
@@ -69,7 +69,7 @@ export async function getDeck(req, res) {
 
     try {
         const { deckId } = req.params;
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user._id })
+        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId })
             .populate("flashcards"); // populate may be unnecessary here or in getDecks, I'm not sure which one is the impostor
 
         if (!deck) {
@@ -97,7 +97,7 @@ export async function updateDeck(req, res) {
     try {
         const { deckId } = req.params;
         const updatedDeck = await FlashcardDeck.findOneAndUpdate(
-            { _id: deckId, user: req.user._id },
+            { _id: deckId, user: req.user.userId },
             req.body,
             { returnDocument: 'after' }
         );
@@ -130,7 +130,7 @@ export async function deleteDeck(req, res) {
         const { deckId } = req.params;
         const deletedDeck = await FlashcardDeck.findOneAndDelete({
             _id: deckId,
-            user: req.user._id,
+            user: req.user.userId,
         });
 
         if (!deletedDeck) {

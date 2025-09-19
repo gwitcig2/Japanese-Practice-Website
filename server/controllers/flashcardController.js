@@ -17,7 +17,7 @@ export async function addFlashcard(req, res) {
         const { deckId } = req.params;
         const { front, back } = req.body;
 
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.id });
+        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId });
         if (!deck) res.status(404).json({ error: "No deck found." });
 
         if (deck.flashcards.length >= 100) {
@@ -51,13 +51,13 @@ export async function updateFlashcard(req, res) {
 
         const { deckId, flashcardId } = req.params;
 
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.id });
+        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId });
         if (!deck) res.status(404).json({ error: "No deck found." });
 
         const flashcard = await Flashcard.findOneAndUpdate(
             { _id: flashcardId, deck: deckId },
             req.body,
-            { returnDocument: after }
+            { returnDocument: 'after' }
         );
 
         if (!flashcard) res.status(404).json({ error: "Flashcard not found." });
@@ -85,7 +85,7 @@ export async function deleteFlashcard(req, res) {
 
         const { deckId, flashcardId } = req.params;
 
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.id });
+        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId });
         if (!deck) res.status(404).json({ error: "No deck found." });
 
         const flashcard = await Flashcard.findOneAndDelete({ _id: flashcardId, deck: deckId });

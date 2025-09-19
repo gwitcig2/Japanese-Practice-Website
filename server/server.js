@@ -6,6 +6,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import readingRouter from "./routes/readingRouter.js";
 import authRouter from "./routes/authRouter.js";
+import flashcardRouter from "./routes/flashcardRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,6 +28,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use("/reading", readingRouter);
 app.use("/auth", authRouter);
+app.use("/decks", flashcardRouter);
 
 export default app;
 
