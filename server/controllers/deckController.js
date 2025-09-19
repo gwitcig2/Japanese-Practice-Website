@@ -1,8 +1,6 @@
 
 import FlashcardDeck from "../models/FlashcardDeck.js";
 
-// TODO: Route to these functions in a new router file and unit test them
-
 /**
  * Creates a new flashcard deck for a user and saves it to MongoDB.
  *
