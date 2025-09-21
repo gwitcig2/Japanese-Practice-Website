@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Yes, Kuromoji needs to be told where its dictionary is. (Kuromojin though...?)
-const dictPath = path.resolve(__dirname, "../../node_modules/kuromoji/dict");
+const dictPath = path.resolve(__dirname, "../../../node_modules/kuromoji/dict");
 
 /**
  * Builds the Kuromoji tokenizer.
