@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-// import { queryGPT } from "../misc/queryGPT.js";
+// import { queryGPT } from "../ai/queryGPT.js";
 import Paragraph from "../../models/Paragraph.js";
 
 /**
