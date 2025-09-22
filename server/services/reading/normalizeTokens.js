@@ -1,8 +1,8 @@
 
 // import { queryGPT } from "./queryGPT.js";
 
-import { VALID_ICHIDAN_VERBS } from "../../constants/validIchidanVerbs.js";
-import { AMBIGUOUS_VERB_FORMS } from "../../constants/ambiguousVerbForms.js";
+import { VALID_ICHIDAN_VERBS } from "./constants/validIchidanVerbs.js";
+import { AMBIGUOUS_VERB_FORMS } from "./constants/ambiguousVerbForms.js";
 
 /**
  *  Post-processes Kuromoji tokens to resolve the following edge-case issues:
