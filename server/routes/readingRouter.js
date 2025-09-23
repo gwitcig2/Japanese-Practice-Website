@@ -1,18 +1,9 @@
 import express from "express";
-import {setupReading} from "../services/reading/setupReading.js";
+import * as readingController from "../controllers/readingController.js";
+import {authenticateJWT} from "../middleware/authenticateJWT.js";
 
 const readingRouter = express.Router();
 
-readingRouter.post("/setupReading", async (req, res) => {
-
-    try {
-        const { input } = req.body;
-        const result = await setupReading(input);
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: `Server Error: ${error.message}` });
-    }
-
-});
+readingRouter.post("/setupReading", authenticateJWT, readingController.getReading);
 
 export default readingRouter;
