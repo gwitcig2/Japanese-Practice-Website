@@ -88,8 +88,16 @@ This website is currently built on a MongoDB, Express, React and NodeJS (MERN) t
 
 ### /decks sub-routes (flashcardRouter.js)
 
-- GET /decks ->
-- 
+- GET /decks -> Retrieves all of a user's flashcard decks, populating each deck with flashcards tied to the deck's MongoDB objectId.
+- POST /decks -> Creates a new flashcard deck.
+- GET /decks/:deckId -> Retrieves one flashcard deck given its MongoDB objectId, held in `:deckId`
+- PUT /decks/:deckId -> Updates a deck's name and/or description.
+- DELETE /decks/:deckId -> Deletes a deck. (And eventually will also cascade delete the flashcards tied to it, too.)
+
+
+- POST /decks/:deckid/flashcards -> Adds a new flashcard to a deck.
+- PUT /decks/:deckId/flashcards/:flashcardId -> Updates a flashcard's front and/or back contents. (May or may not also be used to move the flashcard between decks...?)
+- DELETE /decks/:deckId/flashcards/:flashcardId -> Deletes a flashcard entirely.
 
 ### /reading sub-routes (readingRouter.js)
 
