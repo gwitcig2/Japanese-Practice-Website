@@ -44,44 +44,54 @@ Currently, the full-stack for this website is being developed entirely by me, Ga
 
 This website is currently built on a MongoDB, Express, React and NodeJS (MERN) tech stack.
 
-- `React & TailwindCSS` - No-brainers for building a sleek, snappy, and fully customized single-page user interface.
+- `React & TailwindCSS` - No-brainers for building a sleek, snappy, and fully customized single-page application.
 - `TypeScript` - Used solely in the client-side so that error-checking and code readability are enhanced, making prototyping with Vite's Hot Module Replacement as comprehensive as possible.
 - `JavaScript` - Used primarily in the server-side to avoid over-complicating function pipelines with custom types. Also avoids mis-representing data returned by pure-JavaScript libraries. 
   - Migrating server-side files to TypeScript may occur if code-readability and/or error-checking become too tedious.
 - `MongoDB` - Currently hosted on an Atlas free plan. Stores the JMDict formatted in JSON due to its size (~100MB). Also stores a collection of AI-generated Japanese paragraphs organized by JLPT level. Will eventually store simple user data like their readings and their flashcard decks.
 - `Mongoose` - ODM used in the server-side to retrieve to randomly select from collection of Japanese paragraphs and to batch-query JMDict for the English definitions of an array of Japanese words. 
-- `Express` - Sets up routing for HTTP requests and establishes CORS middleware for the server. 
-  - `Next.js` may be migrated to in the future for benefits like rendering React components server-side and having `NextAuth.js` for easy user authentication. Though this would require a hefty refactor of the project's directory structure.
+- `Express` - Sets up routing for HTTP requests and establishes CORS middleware for the server.
 - `Node.js` - No-brainer server runtime for the pure JavaScript libraries that make this website possible.
 - `Kuromoji.js` - A Japanese morphological analyzer ported to JavaScript that tokenizes each word in a paragraph into their own morphemes, which are formatted as JSON objects. See Kuromoji's [GitHub Repo](https://github.com/takuyaa/kuromoji.js) for more details. 
-  - `Kuromojin` is a `Kuromoji.js` wrapper that could be migrated to for several benefits: `readonly` tokens, quicker tokenization thanks to caching that avoids duplicate calls, and even easier implementation. But there's no immediate reason to have these benefits over plain `Kuromoji.js` just yet.
+  - `Kuromojin` is a `Kuromoji.js` wrapper that could be migrated to for several benefits: `readonly` tokens, quicker tokenization thanks to caching that avoids duplicate calls, and even easier implementation. But these benefits don't outweigh migrating from the plain `Kuromoji.js` implementation just yet.
 
 ## Project Directory Structure
 
 - `/root`
   - `/client` - Front-end code, Vite server config.
     - `/src`
-      - `/readingComponents` - React components for the "Reading" section of the webpage.
+      - `/features` - Holds collections of React components needed by a feature of the website.
+        - `/auth` - Formats the layout and authorization pages like signup, login, and a settings page. 
+        - `/reading` - Sets up the pages for customizing the prompt to create a Japanese reading, make an API request to generate the reading, and then route to the page that displays the reading.
       - `/utils` - TypeScript function libraries that may need to be used across the front-end.
   - `/server` - Back-end code, establishes the Express server and routes to code procedures.
-    - `/constants` - Currently holds exported sets that are relied upon in various `/services` files for handling edge cases.
-    - `/models` - Files that model the structure of collections in the website's MongoDB for `mongoose`.
-    - `/procedures` - Files for creating the `main()`-like function that brings the necessary `/services` together to perform one task. 
-    - `/routes` - Sets up the POST call to a procedure in `/procedures`.
+    - `/controllers` - Handles server requests like an MVC controller would.
+    - `/middleware` - Code needed for validating or blocking a server request.
+    - `/models` - Mongoose schemas that model the structure of a MongoDB collection's documents.
+    - `/routes` - Sets up routes and routers for all implemented back-end requests.
     - `/scripts` - Holds code that is intended to perform one-off tasks, like adding data to a collection in the MongoDB.
-    - `/services` - Files of function libraries necessary to create an organized procedure in `/procedures`.
-    - `/tests` - Unit tests for `/services` files and `/procedures` files, written with Jest.
+    - `/services` - Holds code files that perform various back-end services.
+      - `/ai` - Contains code that helps modularize a prompt to ChatGPT's `4o-mini` model.  
+      - `/auth` - Holds functions containing account CRUD operations
+      - `/reading` - Holds functions that help retrieve a Japanese paragraph and append english dictionary data to each word.
+        - `/constants` -  Contains a map that converts a Kuromoji token's field values to a JMDict code, and sets that store edge-case Japanese verbs to flag.
+    - `/tests` - Jest unit tests for `/services` files.
     - `server.js` - Starts up the back-end Express server with CORS middleware, and connects to the MongoDB with `mongoose`.
 
 ## API Overview
 
-### /auth sub-routes
+### /auth sub-routes (authRouter.js)
 
 - POST /users -> Creates a new user
 - POST /sessions -> Login and creates JWT
 - DELETE /users/:id -> Removes a user (JWT authorization required)
 
-### /reading sub-routes
+### /decks sub-routes (flashcardRouter.js)
+
+- GET /decks ->
+- 
+
+### /reading sub-routes (readingRouter.js)
 
 - POST /setupReading -> Retrieves results of the setupReading pipeline function
 
