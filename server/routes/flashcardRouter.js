@@ -1,7 +1,7 @@
 import express from "express";
 import * as deckController from "../controllers/deckController.js";
 import * as flashcardController from "../controllers/flashcardController.js";
-import { authenticateJWT } from "../services/auth/authenticateJWT.js";
+import { authenticateJWT } from "../middleware/authenticateJWT.js";
 
 const flashcardRouter = express.Router();
 

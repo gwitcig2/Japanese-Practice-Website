@@ -2,7 +2,7 @@ import express from "express";
 import {createUser} from "../services/auth/createUser.js";
 import {loginUser} from "../services/auth/loginUser.js";
 import {deleteUser} from "../services/auth/deleteUser.js";
-import {authenticateJWT} from "../services/auth/authenticateJWT.js";
+import {authenticateJWT} from "../middleware/authenticateJWT.js";
 
 const authRouter = express.Router();
 
