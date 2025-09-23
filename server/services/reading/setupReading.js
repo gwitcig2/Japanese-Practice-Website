@@ -1,8 +1,8 @@
 
-import { grabParagraphFromDB } from "../services/reading/grabParagraph.js";
-import { tokenizeParagraph } from "../services/reading/tokenizer.js";
-import { normalizeTokens } from "../services/reading/normalizeTokens.js";
-import { addEnglishDefinitions } from "../services/reading/toEnglish.js";
+import { grabParagraphFromDB } from "./grabParagraph.js";
+import { tokenizeParagraph } from "./tokenizer.js";
+import { normalizeTokens } from "./normalizeTokens.js";
+import { addEnglishDefinitions } from "./toEnglish.js";
 
 /**
  * Main pipeline for creating a Japanese paragraph reading with dictionary

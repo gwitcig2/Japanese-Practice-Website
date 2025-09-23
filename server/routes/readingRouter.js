@@ -1,5 +1,5 @@
 import express from "express";
-import {setupReading} from "../pipelines/setupReading.js";
+import {setupReading} from "../services/reading/setupReading.js";
 
 const readingRouter = express.Router();
 
