@@ -2,11 +2,18 @@ import request from "supertest";
 import mongoose from "mongoose";
 import app from "../server.js";
 import User from "../models/User.js";
+import {expect} from "@jest/globals";
 
 const testUser = {
     email: "iAmTest@example.com",
     username: "theBestTester",
     password: "ThisIsMyPassword",
+};
+
+const accountChanges = {
+    email: "heresMyNewEmail@example.com",
+    username: "theGreatestTechnicianThatsEverLived",
+    password: "IHatePasswords!"
 };
 
 let jwtToken;
@@ -36,8 +43,6 @@ describe("User authentication routes", () => {
         dbUser = await User.findOne({ username: testUser.username });
         expect(dbUser).toBeDefined();
 
-        console.log(dbUser);
-
     });
 
     test("Login route finds the newly created test account and returns a JWT", async () => {
@@ -50,6 +55,65 @@ describe("User authentication routes", () => {
         expect(res.body).toHaveProperty("token");
 
         jwtToken = res.body.token;
+
+    });
+
+    test("Update route changes a user's email, username, and password, and the returned doc does not contain the password", async () => {
+
+        const res = await request(app)
+            .put(`/auth/users/${dbUser._id}`)
+            .set("Authorization", `Bearer ${jwtToken}`)
+            .send(accountChanges)
+            .expect(200);
+
+        expect(res.body.email).toBe(accountChanges.email);
+
+        expect(res.body.username).toBe(accountChanges.username);
+
+        expect(res.body.password).toBeUndefined();
+
+    });
+
+    test("Update route returns code 401 when no authorization is provided", async () => {
+
+        await request(app)
+            .put(`/auth/users/${dbUser._id}`)
+            .send(accountChanges)
+            .expect(401);
+
+    });
+
+    test("Update route returns code 403 if a user tries updating a different account", async () => {
+
+        await request(app)
+            .put(`/auth/users/imBouttaHackThisDudesAccountLOL`)
+            .set("Authorization", `Bearer ${jwtToken}`)
+            .send(accountChanges)
+            .expect(403);
+
+    });
+
+    test("Update route returns code 409 if a username or email already exists", async () => {
+
+        const emailOnly = {
+            email: "heresMyNewEmail@example.com"
+        }
+
+        await request(app)
+            .put(`/auth/users/${dbUser._id}`)
+            .set("Authorization", `Bearer ${jwtToken}`)
+            .send(emailOnly)
+            .expect(409);
+
+        const usernameOnly = {
+            username: "theGreatestTechnicianThatsEverLived"
+        }
+
+        await request(app)
+            .put(`/auth/users/${dbUser._id}`)
+            .set("Authorization", `Bearer ${jwtToken}`)
+            .send(usernameOnly)
+            .expect(409);
 
     });
 

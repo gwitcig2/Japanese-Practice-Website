@@ -1,6 +1,7 @@
 import {createUser} from "../services/auth/createUser.js";
 import {loginUser} from "../services/auth/loginUser.js";
 import {deleteUser} from "../services/auth/deleteUser.js";
+import {updateUser} from "../services/auth/updateUser.js";
 
 /**
  * Handles creating a user's account and adding it to the MongoDB.
@@ -36,6 +37,37 @@ export async function login(req, res){
         res.status(200).json(result);
     } catch (err) {
         res.status(401).json({ error: "Login failed", details: err.message });
+    }
+
+}
+
+/**
+ * Handles an update to a user's account details, ensuring the user has a valid JWT and is making the request themselves.
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+export async function handleUpdateUser(req, res){
+
+    try {
+        const id = req.params.id;
+
+        if (req.user.userId !== id) {
+            return res.status(403).json({ error: "Unauthorized." });
+        }
+
+        const { email, username, password } = req.body;
+
+        const result = await updateUser(id, email, username, password);
+
+        res.status(200).json(result);
+    } catch (err) {
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
+        }
+
+        res.status(500).json({ error: err.message });
     }
 
 }
