@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Flashcard from "./Flashcard.js";
 
 const deckSchema = new mongoose.Schema({
 
@@ -26,6 +27,21 @@ const deckSchema = new mongoose.Schema({
      * Timestamp for day of creation will be displayed to the user.
      */
     createdAt: { type: Date, default: Date.now },
+
+});
+
+/**
+ * Middleware for automatically removing all flashcards tied to a deck.
+ */
+deckSchema.pre("findOneAndDelete", async function (next) {
+
+    try {
+        const deckId = this.getQuery()._id;
+        await Flashcard.deleteMany({ deck: deckId });
+        next();
+    } catch (err) {
+        next(err);
+    }
 
 });
 
