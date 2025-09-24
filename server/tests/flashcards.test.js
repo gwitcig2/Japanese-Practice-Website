@@ -157,7 +157,7 @@ describe("Flashcard routes", () => {
             .set("Authorization", `Bearer ${jwtToken}`)
             .expect(404);
 
-        expect(res.body).toHaveProperty("error", "Flashcard deck not found.");
+        expect(res.body).toHaveProperty("error", "Deck not found.");
 
     });
 

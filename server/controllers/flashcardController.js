@@ -1,8 +1,10 @@
-import FlashcardDeck from "../models/FlashcardDeck.js";
-import Flashcard from "../models/Flashcard.js";
+import { addFlashcard } from "../services/flashcard/addFlashcard.js";
+import { updateFlashcard } from "../services/flashcard/updateFlashcard.js";
+import { deleteFlashcard } from "../services/flashcard/deleteFlashcard.js";
+
 
 /**
- * Adds a Flashcard to a user's flashcard deck.
+ * Handles a user's request to add a flashcard to one of their flashcard decks.
  *
  * POST /decks/:deckId/flashcards
  *
@@ -10,34 +12,31 @@ import Flashcard from "../models/Flashcard.js";
  * @param res
  * @returns {Promise<void>}
  */
-export async function addFlashcard(req, res) {
+export async function handleAddFlashcard(req, res) {
 
     try {
 
         const { deckId } = req.params;
         const { front, back } = req.body;
 
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId });
-        if (!deck) res.status(404).json({ error: "No deck found." });
+        const result = await addFlashcard(front, back, req.user.userId, deckId);
 
-        if (deck.flashcards.length >= 100) {
-            res.status(400).json({ error: "Flashcard limit on this deck exceeded." });
-        }
-
-        const flashcard = await Flashcard.create({ front, back, deck: deckId});
-        deck.flashcards.push(flashcard._id);
-        await deck.save();
-
-        res.status(201).json(flashcard);
+        res.status(201).json(result);
 
     } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
+        }
+
         res.status(500).json({ error: err.message });
+
     }
 
 }
 
 /**
- * Updates the content in the front and/or back of a flashcard in a deck.
+ * Handles a user's request to update the contents of a flashcard in one of their flashcard decks.
  *
  * PUT /decks/:deckId/flashcards/:flashcardId
  *
@@ -45,27 +44,24 @@ export async function addFlashcard(req, res) {
  * @param res
  * @returns {Promise<void>}
  */
-export async function updateFlashcard(req, res) {
+export async function handleUpdateFlashcard(req, res) {
 
     try {
 
         const { deckId, flashcardId } = req.params;
 
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId });
-        if (!deck) res.status(404).json({ error: "No deck found." });
+        const result = await updateFlashcard(deckId, flashcardId, req.user.userId, req.body);
 
-        const flashcard = await Flashcard.findOneAndUpdate(
-            { _id: flashcardId, deck: deckId },
-            req.body,
-            { returnDocument: 'after' }
-        );
-
-        if (!flashcard) res.status(404).json({ error: "Flashcard not found." });
-
-        res.json(flashcard);
+        res.status(200).json(result);
 
     } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
+        }
+
         res.status(500).json({ error: err.message });
+
     }
 
 }
@@ -79,27 +75,24 @@ export async function updateFlashcard(req, res) {
  * @param res
  * @returns {Promise<void>}
  */
-export async function deleteFlashcard(req, res) {
+export async function handleDeleteFlashcard(req, res) {
 
     try {
 
         const { deckId, flashcardId } = req.params;
 
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId });
-        if (!deck) res.status(404).json({ error: "No deck found." });
-
-        const flashcard = await Flashcard.findOneAndDelete({ _id: flashcardId, deck: deckId });
-        if (!flashcard) res.status(404).json({ error: "Flashcard not found." });
-
-        deck.flashcards = deck.flashcards.filter(
-            (id) => id.toString() !== flashcardId
-        );
-        await deck.save();
+        await deleteFlashcard(deckId, flashcardId, req.user.userId);
 
         res.json({ message: "Flashcard deleted successfully." });
 
     } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
+        }
+
         res.status(500).json({ error: err.message });
+
     }
 
 }

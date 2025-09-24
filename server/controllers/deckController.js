@@ -1,8 +1,11 @@
-
-import FlashcardDeck from "../models/FlashcardDeck.js";
+import { createDeck } from "../services/deck/createDeck.js";
+import { getDecks } from "../services/deck/getDecks.js";
+import { getDeck } from "../services/deck/getDeck.js";
+import { updateDeck } from "../services/deck/updateDeck.js";
+import { deleteDeck } from "../services/deck/deleteDeck.js";
 
 /**
- * Creates a new flashcard deck for a user and saves it to MongoDB.
+ * Handles a user's request to create a new flashcard deck.
  *
  * POST /decks
  *
@@ -10,20 +13,16 @@ import FlashcardDeck from "../models/FlashcardDeck.js";
  * @param res
  * @returns {Promise<void>}
  */
-export async function createDeck(req, res) {
+export async function handleCreateDeck(req, res) {
 
     try {
+
         const { name, description } = req.body;
 
-        const newDeck = new FlashcardDeck({
-            name: name,
-            description: !description ?  "" : description,
-            user: req.user.userId,
-        });
+        const result = await createDeck(name, description, req.user.userId);
 
-        await newDeck.save();
+        res.status(201).json(result);
 
-        res.status(201).json(newDeck);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -31,7 +30,7 @@ export async function createDeck(req, res) {
 }
 
 /**
- * Retrieves all of a user's flashcard decks from MongoDB and populates the `flashcards` field with intended flashcards.
+ * Handles a request to retrieve all of a user's flashcard decks.
  *
  * GET /decks
  *
@@ -39,25 +38,28 @@ export async function createDeck(req, res) {
  * @param res
  * @returns {Promise<void>}
  */
-export async function getDecks(req, res) {
+export async function handleGetDecks(req, res) {
 
     try {
-        const decks = await FlashcardDeck.find({ user: req.user.userId })
-            .populate("flashcards");
 
-        if (!decks) {
-            res.status(404).json({ error: "Flashcard decks not found."})
+        const result = await getDecks(req.user.userId);
+
+        res.status(200).json(result);
+
+    } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
         }
 
-        res.json(decks);
-    } catch (err) {
         res.status(500).json({ error: err.message });
+
     }
 
 }
 
 /**
- * Retrieves one flashcard deck based on its objectId and the user's objectId.
+ * Handles a user's request to retrieve just one of their flashcard decks.
  *
  * GET /decks/:deckId
  *
@@ -65,26 +67,30 @@ export async function getDecks(req, res) {
  * @param res
  * @returns {Promise<void>}
  */
-export async function getDeck(req, res) {
+export async function handleGetDeck(req, res) {
 
     try {
-        const { deckId } = req.params;
-        const deck = await FlashcardDeck.findOne({ _id: deckId, user: req.user.userId })
-            .populate("flashcards"); // populate may be unnecessary here or in getDecks, I'm not sure which one is the impostor
 
-        if (!deck) {
-            res.status(404).json({ error: "Flashcard deck not found." });
+        const { deckId } = req.params;
+
+        const result = await getDeck(deckId, req.user.userId);
+
+        res.status(200).json(result);
+
+    } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
         }
 
-        res.json(deck);
-    } catch (err) {
         res.status(500).json({ error: err.message });
+
     }
 
 }
 
 /**
- * Updates the name and/or description of a flashcard deck.
+ * Handles a user's request to update the name and/or description of a flashcard deck.
  *
  * PUT /decks/:deckId
  *
@@ -92,54 +98,55 @@ export async function getDeck(req, res) {
  * @param res
  * @returns {Promise<void>}
  */
-export async function updateDeck(req, res) {
+export async function handleUpdateDeck(req, res) {
 
     try {
-        const { deckId } = req.params;
-        const updatedDeck = await FlashcardDeck.findOneAndUpdate(
-            { _id: deckId, user: req.user.userId },
-            req.body,
-            { returnDocument: 'after' }
-        );
 
-        if (!updatedDeck) {
-            res.status(404).json({ error: "Flashcard deck not found." });
+        const { deckId } = req.params;
+
+        const result = await updateDeck(deckId, req.user.userId, req.body);
+
+        res.status(200).json(result);
+
+    } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
         }
 
-        res.json(updatedDeck);
-    } catch (err) {
         res.status(500).json({ error: err.message });
+
     }
 
 }
 
 /**
- * Deletes one user's flashcard deck, and corresponding flashcards undergo cascade deletion.
+ * Handles a user's request to delete one of their flashcard decks, and the flashcards inside of them.
  *
  * DELETE /decks/:deckId
- *
- * // TODO: Implement cascade deletion middleware
  *
  * @param req
  * @param res
  * @returns {Promise<void>}
  */
-export async function deleteDeck(req, res) {
+export async function handleDeleteDeck(req, res) {
 
     try {
-        const { deckId } = req.params;
-        const deletedDeck = await FlashcardDeck.findOneAndDelete({
-            _id: deckId,
-            user: req.user.userId,
-        });
 
-        if (!deletedDeck) {
-            res.status(404).json({ error: "Flashcard deck not found." });
+        const { deckId } = req.params;
+
+        await deleteDeck(deckId, req.user.userId);
+
+        res.status(200).json({ message: "Flashcard deck and its flashcards deleted." });
+
+    } catch (err) {
+
+        if (err.status) {
+            return res.status(err.status).json({ error: err.message });
         }
 
-        res.json({ message: "Flashcard deck and its flashcards deleted." });
-    } catch (err) {
         res.status(500).json({ error: err.message });
+
     }
 
-};
+}
