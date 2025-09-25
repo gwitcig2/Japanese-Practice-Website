@@ -1,6 +1,6 @@
-import {createUser} from "../services/auth/createUser.js";
-import {deleteUser} from "../services/auth/deleteUser.js";
-import {updateUser} from "../services/auth/updateUser.js";
+import {createUser} from "../services/user/createUser.js";
+import {deleteUser} from "../services/user/deleteUser.js";
+import {updateUser} from "../services/user/updateUser.js";
 
 /**
  * Handles creating a user's account and adding it to the MongoDB.

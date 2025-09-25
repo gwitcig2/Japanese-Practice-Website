@@ -1,4 +1,4 @@
-import {loginUser} from "../services/auth/loginUser.js";
+import {loginUser} from "../services/user/loginUser.js";
 
 /**
  * Handles logging a user in to the website and giving them a valid JWT token if authorized.
