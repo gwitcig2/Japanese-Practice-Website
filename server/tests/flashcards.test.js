@@ -37,14 +37,14 @@ describe("Flashcard routes", () => {
     beforeAll(async () => {
 
         await request(app)
-            .post("/auth/users")
+            .post("/users")
             .send(testUser)
             .expect(201);
 
         dbUser = await User.findOne({ username: testUser.username });
 
         const loginRes = await request(app)
-            .post("/auth/sessions")
+            .post("/sessions")
             .send(testUser)
             .expect(200);
 
