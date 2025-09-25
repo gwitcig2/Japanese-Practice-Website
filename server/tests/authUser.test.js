@@ -86,7 +86,7 @@ describe("User authentication routes", () => {
     test("Update route returns code 403 if a user tries updating a different account", async () => {
 
         await request(app)
-            .put(`/auth/users/imBouttaHackThisDudesAccountLOL`)
+            .put(`/users/imBouttaHackThisDudesAccountLOL`)
             .set("Authorization", `Bearer ${jwtToken}`)
             .send(accountChanges)
             .expect(403);
