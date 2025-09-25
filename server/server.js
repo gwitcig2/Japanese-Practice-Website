@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import readingRouter from "./routes/readingRouter.js";
-import authRouter from "./routes/authRouter.js";
+import sessionsRouter from "./routes/sessionsRouter.js";
 import flashcardRouter from "./routes/flashcardRouter.js";
 import userRouter from "./routes/userRouter.js";
 
@@ -29,7 +29,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 app.use("/reading", readingRouter);
 app.use("/users", userRouter);
-app.use("/sessions", authRouter);
+app.use("/sessions", sessionsRouter);
 app.use("/decks", flashcardRouter);
 
 export default app;

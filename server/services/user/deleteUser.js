@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 /**
  * Removes a user from the DB given their `_id` from MongoDB. Authorization for this request
- * is done in `authRouter.js` with the `authenticateJWT` function.
+ * is done in `userRouter.js` with the `authenticateJWT` function.
  *
  * @param userId
  * @returns {Promise<{message: string}>}
