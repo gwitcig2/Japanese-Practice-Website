@@ -16,6 +16,12 @@ const userSchema = new mongoose.Schema({
      * Stores a user's password hashed with bcrypt.
      */
     password: { type: String, required: true },
+    /**
+     * Stores hashed refresh tokens so that a user can be automatically
+     * logged in on multiple devices, then logged out once the refresh token
+     * expires.
+     */
+    refreshTokens: [{ type: String }],
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
