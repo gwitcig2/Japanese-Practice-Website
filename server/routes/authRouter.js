@@ -1,13 +1,10 @@
 import express from "express";
-import {authenticateJWT} from "../middleware/authenticateJWT.js";
-import * as userController from "../controllers/userController.js";
-
+import * as authController from "../controllers/authController.js";
 
 const authRouter = express.Router();
 
-authRouter.post("/users", userController.signup);
-authRouter.post("/sessions", userController.login);
-authRouter.put("/users/:id", authenticateJWT, userController.handleUpdateUser);
-authRouter.delete("/users/:id", authenticateJWT, userController.handleDeleteUser);
+authRouter.post("/", authController.login);
+authRouter.put("/", authController.handleRefresh);
+authRouter.delete("/", authController.handleLogout);
 
 export default authRouter;

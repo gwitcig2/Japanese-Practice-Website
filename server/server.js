@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import readingRouter from "./routes/readingRouter.js";
 import authRouter from "./routes/authRouter.js";
 import flashcardRouter from "./routes/flashcardRouter.js";
+import userRouter from "./routes/userRouter.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +28,8 @@ mongoose.connect(process.env.MONGO_URI)
 .catch((err) => console.error("MongoDB Connection Error:", err));
 
 app.use("/reading", readingRouter);
-app.use("/auth", authRouter);
+app.use("/users", userRouter);
+app.use("/sessions", authRouter);
 app.use("/decks", flashcardRouter);
 
 export default app;

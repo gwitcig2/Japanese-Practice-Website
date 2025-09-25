@@ -1,5 +1,4 @@
 import {createUser} from "../services/auth/createUser.js";
-import {loginUser} from "../services/auth/loginUser.js";
 import {deleteUser} from "../services/auth/deleteUser.js";
 import {updateUser} from "../services/auth/updateUser.js";
 
@@ -18,25 +17,6 @@ export async function signup(req, res){
         res.status(201).json(result);
     } catch (error) {
         res.status(400).json({ error: `Account creation error: ${error.message}` });
-    }
-
-}
-
-/**
- * Handles logging a user in to the website and giving them a valid JWT token if authorized.
- *
- * @param req
- * @param res
- * @returns {Promise<void>}
- */
-export async function login(req, res){
-
-    try {
-        const { email, username, password } = req.body;
-        const result = await loginUser(email, username, password);
-        res.status(200).json(result);
-    } catch (err) {
-        res.status(401).json({ error: "Login failed", details: err.message });
     }
 
 }
