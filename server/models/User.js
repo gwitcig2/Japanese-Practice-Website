@@ -21,7 +21,10 @@ const userSchema = new mongoose.Schema({
      * logged in on multiple devices, then logged out once the refresh token
      * expires.
      */
-    refreshTokens: [{ type: String }],
+    refreshTokens: {
+        type: [String],
+        default: []
+    },
 }, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);

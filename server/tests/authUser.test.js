@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import app from "../server.js";
 import User from "../models/User.js";
 import {expect} from "@jest/globals";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const testUser = {
     email: "iAmTest@example.com",
@@ -30,31 +32,56 @@ afterAll(async () => {
 
 describe("User authentication routes", () => {
 
-    test("Signup route makes a new test user", async () => {
+    test("Signup route makes a new test user and provides them with valid access and refresh JWTs", async () => {
 
         const res = await request(app)
             .post("/users")
             .send(testUser)
             .expect(201);
 
-        expect(res.body).toHaveProperty("id");
-        expect(res.body).toHaveProperty("username");
-
+        // Confirming if user was added to the database successfully
         dbUser = await User.findOne({ username: testUser.username });
         expect(dbUser).toBeDefined();
 
-    });
+        // Checking if the user was given a valid access JWT
+        expect(res.body).toHaveProperty("accessToken");
 
-    test("Login route finds the newly created test account and returns a JWT", async () => {
+        const verifyAccess = jwt.verify(res.body.accessToken, process.env.JWT_KEY);
+        expect(verifyAccess).toBeDefined();
+        expect(verifyAccess.userId === dbUser._id.toString()).toBe(true);
 
-        const res = await request(app)
-            .post("/sessions")
-            .send(testUser)
-            .expect(200);
+        // Checking if the hashed refresh JWT was added to the user's refreshTokens array
+        expect(dbUser.refreshTokens).toBeInstanceOf(Array);
+        expect(dbUser.refreshTokens.length).toBeGreaterThan(0);
 
-        expect(res.body).toHaveProperty("token");
+        // Verifying the un-hashed refresh JWT is in an HttpOnly cookie
+        const cookies = res.headers["set-cookie"];
+        expect(cookies).toBeDefined();
 
-        jwtToken = res.body.token;
+        const refreshCookie = cookies.find(c => c.startsWith("refreshToken="));
+        expect(refreshCookie).toBeDefined();
+
+        const refreshToken = refreshCookie
+            .split(";")[0]
+            .split("=")[1];
+
+        // Confirming the refresh JWT has the expected key and is tied to the test user
+        const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
+        expect(payload).toHaveProperty("userId");
+        expect(payload.userId === dbUser._id.toString()).toBe(true);
+
+        // Verifying that the hashed refresh JWT in the DB is equal to the real refresh JWT
+        expect(await bcrypt.compare(refreshToken, dbUser.refreshTokens[0])).toBe(true);
+
+        // Making the access JWT global so we can do unit tests with authorization for the other user routes
+        jwtToken = res.body.accessToken;
+
+        // Checking if returned user data matches their MongoDB objectId and testUser's username
+        expect(res.body.user).toHaveProperty("userId");
+        expect(res.body.user.userId === dbUser._id.toString()).toBe(true);
+
+        expect(res.body.user).toHaveProperty("username");
+        expect(res.body.user.username === testUser.username).toBe(true);
 
     });
 

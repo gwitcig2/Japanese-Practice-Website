@@ -22,7 +22,7 @@ export async function login(req, res){
         const user = await loginUser(email, username, password);
 
         const accessToken = generateAccessToken(user._id);
-        const refreshToken = generateRefreshToken(user._id);
+        const refreshToken = await generateRefreshToken(user._id);
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,

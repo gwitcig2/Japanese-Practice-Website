@@ -17,7 +17,7 @@ export async function signup(req, res){
         const user = await createUser(email, username, password);
 
         const accessToken = generateAccessToken(user.userId);
-        const refreshToken = generateRefreshToken(user.userId);
+        const refreshToken = await generateRefreshToken(user.userId);
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
