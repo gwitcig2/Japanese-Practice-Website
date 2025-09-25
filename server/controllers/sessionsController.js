@@ -4,7 +4,7 @@ import {
     generateRefreshToken,
     revokeRefreshToken,
     verifyRefreshToken
-} from "../services/auth/tokenServices.js";
+} from "../services/jwt/jwtServices.js";
 import jwt from "jsonwebtoken";
 
 /**

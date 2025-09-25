@@ -1,7 +1,7 @@
 import {createUser} from "../services/user/createUser.js";
 import {deleteUser} from "../services/user/deleteUser.js";
 import {updateUser} from "../services/user/updateUser.js";
-import {generateAccessToken, generateRefreshToken} from "../services/auth/tokenServices.js";
+import {generateAccessToken, generateRefreshToken} from "../services/jwt/jwtServices.js";
 
 /**
  * Handles creating a user's account, adding it to the MongoDB, and automatically logging the user in.
