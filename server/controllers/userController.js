@@ -1,9 +1,10 @@
 import {createUser} from "../services/user/createUser.js";
 import {deleteUser} from "../services/user/deleteUser.js";
 import {updateUser} from "../services/user/updateUser.js";
+import {generateAccessToken, generateRefreshToken} from "../services/auth/tokenServices.js";
 
 /**
- * Handles creating a user's account and adding it to the MongoDB.
+ * Handles creating a user's account, adding it to the MongoDB, and automatically logging the user in.
  *
  * @param req
  * @param res
@@ -13,8 +14,21 @@ export async function signup(req, res){
 
     try {
         const { email, username, password } = req.body;
-        const result = await createUser(email, username, password);
-        res.status(201).json(result);
+        const user = await createUser(email, username, password);
+
+        const accessToken = generateAccessToken(user.userId);
+        const refreshToken = generateRefreshToken(user.userId);
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        });
+
+        res.status(201).json({
+            accessToken,
+            user
+        });
     } catch (error) {
         res.status(400).json({ error: `Account creation error: ${error.message}` });
     }

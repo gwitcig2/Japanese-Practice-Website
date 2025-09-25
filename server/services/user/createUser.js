@@ -2,12 +2,12 @@ import bcrypt from "bcrypt";
 import User from "../../models/User.js";
 
 /**
- * Creates a new user entry in the MongoDB given an email address and a password.
+ * Creates a new user entry in the MongoDB given an email address, username, and a password.
  * The password is hashed with bcrypt before going to the MongoDB.
  *
- * Returns a JSON of the new user's ID and their email.
+ * Returns a JSON of the new user's ID and their username.
  *
- * If a user's email already exists, throws an Error.
+ * If a user's email or username already exists, throws an Error.
  *
  * @param email
  * @param username
@@ -27,6 +27,6 @@ export async function createUser(email, username, password) {
     const newUser = new User({ email: email, username: username, password: hashPassword });
     await newUser.save();
 
-    return { id: newUser._id, username: newUser.username };
+    return { userId: newUser._id, username: newUser.username };
 
 }
