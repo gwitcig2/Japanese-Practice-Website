@@ -39,7 +39,7 @@ describe("User authentication routes", () => {
             .send(testUser)
             .expect(201);
 
-        // Confirming if user was added to the database successfully
+        // Confirming if testUser's data was added to the database successfully
         dbUser = await User.findOne({ username: testUser.username });
         expect(dbUser).toBeDefined();
 
@@ -50,10 +50,6 @@ describe("User authentication routes", () => {
         expect(verifyAccess).toBeDefined();
         expect(verifyAccess.userId === dbUser._id.toString()).toBe(true);
 
-        // Checking if the hashed refresh JWT was added to the user's refreshTokens array
-        expect(dbUser.refreshTokens).toBeInstanceOf(Array);
-        expect(dbUser.refreshTokens.length).toBeGreaterThan(0);
-
         // Verifying the un-hashed refresh JWT is in an HttpOnly cookie
         const cookies = res.headers["set-cookie"];
         expect(cookies).toBeDefined();
@@ -61,19 +57,23 @@ describe("User authentication routes", () => {
         const refreshCookie = cookies.find(c => c.startsWith("refreshToken="));
         expect(refreshCookie).toBeDefined();
 
+        // Confirming that the refresh JWT has the expected key and is tied to the test user
         const refreshToken = refreshCookie
             .split(";")[0]
             .split("=")[1];
 
-        // Confirming the refresh JWT has the expected key and is tied to the test user
         const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
         expect(payload).toHaveProperty("userId");
         expect(payload.userId === dbUser._id.toString()).toBe(true);
 
+        // Checking if the hashed refresh JWT was added to the user's refreshTokens array
+        expect(dbUser.refreshTokens).toBeInstanceOf(Array);
+        expect(dbUser.refreshTokens.length).toBeGreaterThan(0);
+
         // Verifying that the hashed refresh JWT in the DB is equal to the real refresh JWT
         expect(await bcrypt.compare(refreshToken, dbUser.refreshTokens[0])).toBe(true);
 
-        // Making the access JWT global so we can do unit tests with authorization for the other user routes
+        // Making the access JWT global so we can do unit tests with proper authorization for the other /users API requests
         jwtToken = res.body.accessToken;
 
         // Checking if returned user data matches their MongoDB objectId and testUser's username
