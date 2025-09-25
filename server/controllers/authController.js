@@ -1,4 +1,11 @@
 import {loginUser} from "../services/user/loginUser.js";
+import {
+    generateAccessToken,
+    generateRefreshToken,
+    revokeRefreshToken,
+    verifyRefreshToken
+} from "../services/auth/tokenServices.js";
+import jwt from "jsonwebtoken";
 
 /**
  * Handles logging a user in to the website and giving them a valid JWT token if authorized.
@@ -10,19 +17,66 @@ import {loginUser} from "../services/user/loginUser.js";
 export async function login(req, res){
 
     try {
+
         const { email, username, password } = req.body;
-        const result = await loginUser(email, username, password);
-        res.status(200).json(result);
+        const user = await loginUser(email, username, password);
+
+        const accessToken = generateAccessToken(user._id);
+        const refreshToken = generateRefreshToken(user._id);
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+        });
+
+        res.status(200).json({ accessToken, userId: user._id });
+
     } catch (err) {
         res.status(401).json({ error: "Login failed", details: err.message });
     }
 
 }
 
+/**
+ * Handles verifying that a user has a valid refresh JWT, and if they do, issues them a new access JWT.
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
 export async function handleRefresh(req, res){
+
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.sendStatus(401);
+
+    const payload = await verifyRefreshToken(refreshToken);
+    if (!payload) return res.sendStatus(403);
+
+    const newAccessToken = generateAccessToken(payload.userId);
+    return res.json({ newAccessToken });
 
 }
 
+/**
+ * Handles a user's logout request by revoking their refresh JWT, if it exists, and clearing the refreshToken cookie.
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
 export async function handleLogout(req, res){
+
+    const refreshToken = req.cookies.refreshToken;
+
+    if (refreshToken) {
+        const payload = jwt.decode(refreshToken);
+        if (payload) {
+            await revokeRefreshToken(payload.userId, refreshToken);
+        }
+    }
+
+    res.clearCookie("refreshToken");
+    return res.sendStatus(204);
 
 }
