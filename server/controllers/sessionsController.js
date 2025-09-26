@@ -33,7 +33,11 @@ export async function login(req, res){
         res.status(200).json({ accessToken, userId: user._id });
 
     } catch (err) {
-        res.status(401).json({ error: "Login failed", details: err.message });
+        if (err.status) {
+            res.status(err.status).json({ error: err.message });
+        }
+
+        res.status(500).json({ error: "Login failed", details: err.message });
     }
 
 }
@@ -47,14 +51,18 @@ export async function login(req, res){
  */
 export async function handleRefresh(req, res){
 
-    const refreshToken = req.cookies.refreshToken;
-    if (!refreshToken) return res.sendStatus(401);
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) return res.sendStatus(401);
 
-    const payload = await verifyRefreshToken(refreshToken);
-    if (!payload) return res.sendStatus(403);
+        const payload = await verifyRefreshToken(refreshToken);
+        if (!payload) return res.sendStatus(401);
 
-    const newAccessToken = generateAccessToken(payload.userId);
-    return res.json({ newAccessToken });
+        const newAccessToken = generateAccessToken(payload.userId);
+        return res.status(200).json({ accessToken: newAccessToken});
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 
 }
 
@@ -67,16 +75,26 @@ export async function handleRefresh(req, res){
  */
 export async function handleLogout(req, res){
 
-    const refreshToken = req.cookies.refreshToken;
+    try {
 
-    if (refreshToken) {
-        const payload = jwt.decode(refreshToken);
-        if (payload) {
-            await revokeRefreshToken(payload.userId, refreshToken);
+        const refreshToken = req.cookies.refreshToken;
+
+        if (refreshToken) {
+            const payload = jwt.decode(refreshToken);
+            if (payload) {
+                await revokeRefreshToken(payload.userId, refreshToken);
+            }
         }
-    }
 
-    res.clearCookie("refreshToken");
-    return res.sendStatus(204);
+        res.clearCookie("refreshToken");
+        return res.sendStatus(204);
+
+    } catch (err) {
+        if (err.status) {
+            res.status(err.status).json({ error: err.message });
+        }
+
+        res.status(500).json({ error: err.message });
+    }
 
 }

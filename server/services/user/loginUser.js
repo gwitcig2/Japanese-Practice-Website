@@ -21,10 +21,18 @@ export async function loginUser(email, username, password) {
             { username: username }
         ]
     });
-    if (!user) throw new Error("Could not find user");
+    if (!user) {
+        const err = new Error("User not found");
+        err.status = 404;
+        throw err;
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw new Error("Invalid password");
+    if (!isMatch) {
+        const err = new Error("Passwords do not match");
+        err.status = 401;
+        throw err;
+    }
 
     return user;
 

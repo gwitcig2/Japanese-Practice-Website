@@ -46,10 +46,17 @@ export async function generateRefreshToken(userId) {
 export async function revokeRefreshToken(userId, refreshToken) {
 
     const user = await User.findById(userId);
+    if (!user) {
+        const err = new Error("User not found");
+        err.status = 404;
+        throw err;
+    }
 
-    user.refreshTokens = user.refreshTokens.filter(
-        async (hashed) => !(await bcrypt.compare(refreshToken, hashed))
+    const matches = await Promise.all(
+        user.refreshTokens.map((hashed) => bcrypt.compare(refreshToken, hashed))
     );
+
+    user.refreshTokens = user.refreshTokens.filter((_, i) => !matches[i]);
 
     await user.save();
 
