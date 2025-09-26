@@ -2,6 +2,7 @@ import {createUser} from "../services/user/createUser.js";
 import {deleteUser} from "../services/user/deleteUser.js";
 import {updateUser} from "../services/user/updateUser.js";
 import {generateAccessToken, generateRefreshToken} from "../services/jwt/jwtServices.js";
+import User from "../models/User.js";
 
 /**
  * Handles creating a user's account, adding it to the MongoDB, and automatically logging the user in.
@@ -31,6 +32,25 @@ export async function signup(req, res){
         });
     } catch (error) {
         res.status(400).json({ error: `Account creation error: ${error.message}` });
+    }
+
+}
+
+/**
+ * Handles simple retrieval of a user's username and email, given the userId stored in their access JWT.
+ *
+ * @param req
+ * @param res
+ * @returns {Promise<*>}
+ */
+export async function handleGetMe(req,res){
+
+    try {
+        const user = await User.findById(req.user.userId).select("-password -refreshTokens");
+        if (!user) return res.sendStatus(403);
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 
 }

@@ -85,6 +85,27 @@ describe("User authentication routes", () => {
 
     });
 
+    test("GET /users/me returns just the user's email and password in a JSON", async () => {
+
+        const res = await request(app)
+            .get(`/users/me`)
+            .set("Authorization", `Bearer ${jwtToken}`)
+            .expect(200);
+
+        expect(res.body).toHaveProperty("_id");
+        expect(res.body._id === dbUser._id.toString()).toBe(true);
+
+        expect(res.body).toHaveProperty("email");
+        expect(res.body.email === testUser.email).toBe(true);
+
+        expect(res.body).toHaveProperty("username");
+        expect(res.body.username === testUser.username).toBe(true);
+
+        expect(res.body.password).toBeUndefined();
+        expect(res.body.refreshTokens).toBeUndefined();
+
+    });
+
     test("Update route changes a user's email, username, and password, and the returned doc does not contain the password", async () => {
 
         const res = await request(app)
