@@ -26,10 +26,7 @@ export async function signup(req, res){
             sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
         });
 
-        res.status(201).json({
-            accessToken,
-            user
-        });
+        res.status(201).json({ accessToken });
     } catch (error) {
         res.status(400).json({ error: `Account creation error: ${error.message}` });
     }

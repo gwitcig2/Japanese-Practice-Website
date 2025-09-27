@@ -30,7 +30,7 @@ export async function login(req, res){
             sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
         });
 
-        res.status(200).json({ accessToken, userId: user._id });
+        res.status(200).json({ accessToken });
 
     } catch (err) {
         if (err.status) {

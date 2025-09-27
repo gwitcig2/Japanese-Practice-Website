@@ -76,13 +76,6 @@ describe("User authentication routes", () => {
         // Making the access JWT global so we can do unit tests with proper authorization for the other /users API requests
         jwtToken = res.body.accessToken;
 
-        // Checking if returned user data matches their MongoDB objectId and testUser's username
-        expect(res.body.user).toHaveProperty("userId");
-        expect(res.body.user.userId === dbUser._id.toString()).toBe(true);
-
-        expect(res.body.user).toHaveProperty("username");
-        expect(res.body.user.username === testUser.username).toBe(true);
-
     });
 
     test("GET /users/me returns just the user's email and password in a JSON", async () => {

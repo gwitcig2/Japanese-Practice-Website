@@ -82,12 +82,6 @@ describe("Sessions routes", () => {
         // Making the access JWT global so we can do unit tests with proper authorization for the other /users API requests
         jwtToken = res.body.accessToken;
 
-        // Checking if the userId returned is the same as the test user's MongoDB _id
-        expect(res.body).toHaveProperty("userId");
-        expect(res.body.userId === dbUser._id.toString()).toBe(true);
-
-        userId = res.body.userId;
-
     });
 
     test("POST /sessions returns code 404 if its given an email or username that doesn't exist", async () => {
