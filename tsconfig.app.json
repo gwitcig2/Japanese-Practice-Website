@@ -24,7 +24,7 @@
     "noUncheckedSideEffectImports": true,
 
     /* shadcn config */
-    "baseUrl": ".",
+    "baseUrl": "./client",
     "paths": {
       "@/*": [
         "./src/*"
@@ -32,6 +32,6 @@
     }
   },
   "include": [
-    "src"
+    "client/src"
   ]
 }
