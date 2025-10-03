@@ -24,11 +24,10 @@
     "noUncheckedSideEffectImports": true,
 
     /* shadcn config */
-    "baseUrl": "./client",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./client/src/*"],
+      "@shared": ["./shared/*"]
     }
   },
   "include": [

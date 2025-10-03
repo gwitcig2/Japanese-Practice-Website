@@ -5,9 +5,10 @@
     { "path": "./tsconfig.node.json"}
   ],
   "compilerOptions": {
-    "baseUrl": "./client",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./client/src/*"],
+      "@shared/*": ["./shared/*"]
     }
   }
 }
