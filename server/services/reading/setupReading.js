@@ -12,8 +12,6 @@ import { addEnglishDefinitions } from "./toEnglish.js";
  */
 export async function setupReading(input) {
 
-    console.log(input);
-
     const paragraph = await grabParagraphFromDB();
     const initTokens = await tokenizeParagraph(paragraph);
     const normalizedTokens = await normalizeTokens(initTokens, paragraph);

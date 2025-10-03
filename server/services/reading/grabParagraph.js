@@ -17,11 +17,7 @@ export async function grabParagraphFromDB(/* params */) {
         { $sample: { size: 1 } }
     ]);
 
-    console.log("query", query);
-
     const result = query[0].paragraph;
-
-    console.log(result);
 
     return result;
 
