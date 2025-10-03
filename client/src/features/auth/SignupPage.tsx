@@ -1,16 +1,15 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@src/components/ui/button"
 import {
     Card,
-    CardAction,
     CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@src/components/ui/card"
 /*
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@src/components/ui/input"
+import { Label } from "@src/components/ui/label"
  */
 
 export default function SignupPage() {
@@ -21,9 +20,6 @@ export default function SignupPage() {
                 <CardDescription>
                     Enter your email below to login to your account
                 </CardDescription>
-                <CardAction>
-                    <Button variant="link">Sign Up</Button>
-                </CardAction>
             </CardHeader>
             <CardContent>
                 <p>I should be a form someday!</p>
