@@ -1,67 +1,83 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import AuthLayout from "./AuthLayout.tsx";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@src/components/ui/card.tsx";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@src/components/ui/form.tsx";
+import { Input } from "@src/components/ui/input.tsx";
+import { Button } from "@src/components/ui/button.tsx";
+import { useForm } from "react-hook-form";
+import { type loginForm, loginFormSchema } from "@shared/authSchemas.ts";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-function LoginPage() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!email || !password) return setError("All fields are required.");
+export default function LoginPage() {
+
+
+    const form = useForm<loginForm>({
+
+        resolver: zodResolver(loginFormSchema),
+        defaultValues: {
+            identifier: "",
+            password: "",
+        },
+
+    });
+
+    const watchIdentifier = form.watch("identifier");
+    const watchPassword = form.watch("password");
+
+    function onSubmit(values: loginForm) {
 
         try {
-            setLoading(true);
-            setError(null);
-            await new Promise((res) => setTimeout(res, 800)); // fake request
-            console.log("Login success:", { email });
-        } catch (err: any) {
-            setError(err.message || "Login failed.");
-        } finally {
-            setLoading(false);
+            console.log(values);
+            // await api.post("/sessions", values);
+            // navigate("/dashboard")
+        } catch (err) {
+            console.error(err);
         }
-    };
+
+    }
 
     return (
-        <AuthLayout title="Login">
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {error && <div className="text-red-600 text-sm">{error}</div>}
+        <Card className="w-full max-w-sm">
+            <CardHeader>
+                <CardTitle>Log in to your account</CardTitle>
+                <CardDescription>
+                    Enter your credentials to log in.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="identifier"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email or Username</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="example@email.com" {...field} />
+                                    </FormControl>
+                                    { watchIdentifier && <FormMessage className="text-red-500"/> }
+                                </FormItem>
+                            )}
+                        />
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full border rounded p-2"
-                />
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input type="password" placeholder="••••••••" {...field} />
+                                    </FormControl>
+                                    { watchPassword && <FormMessage className="text-red-500"/> }
+                                </FormItem>
+                            )}
+                        />
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border rounded p-2"
-                />
-
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
-                >
-                    {loading ? "Signing in..." : "Sign In"}
-                </button>
-            </form>
-
-            <p className="mt-4 text-sm text-center">
-                Don’t have an account?{" "}
-                <Link to="/signup" className="text-indigo-600 hover:underline">
-                    Sign up
-                </Link>
-            </p>
-        </AuthLayout>
+                        <Button type="submit" className="border">Log In</Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
     );
 }
-
-export default LoginPage
