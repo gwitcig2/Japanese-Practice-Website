@@ -6,7 +6,7 @@ import {
     verifyRefreshToken
 } from "../services/jwt/jwtServices.js";
 import jwt from "jsonwebtoken";
-import { loginFormSchema } from "@shared/authSchemas.js";
+import { loginFormSchema } from "@shared/formSchemas.ts";
 
 /**
  * Handles logging a user in to the website and giving them a valid JWT token if authorized.
