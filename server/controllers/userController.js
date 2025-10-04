@@ -3,6 +3,7 @@ import {deleteUser} from "../services/user/deleteUser.js";
 import {updateUser} from "../services/user/updateUser.js";
 import {generateAccessToken, generateRefreshToken} from "../services/jwt/jwtServices.js";
 import User from "../models/User.js";
+import { signupFormSchema } from "@shared/authSchemas.js";
 
 /**
  * Handles creating a user's account, adding it to the MongoDB, and automatically logging the user in.
@@ -14,7 +15,8 @@ import User from "../models/User.js";
 export async function signup(req, res){
 
     try {
-        const { email, username, password } = req.body;
+        const validSignup = signupFormSchema.parse(req.body);
+        const { email, username, password } = validSignup;
         const user = await createUser(email, username, password);
 
         const accessToken = generateAccessToken(user.userId);
