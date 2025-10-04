@@ -33,3 +33,11 @@ export const loginFormSchema = z.strictObject({
 });
 
 export type loginForm = z.infer<typeof loginFormSchema>;
+
+export const readingFormSchema = z.strictObject({
+    sentences: z.number().gte(4).lte(8),
+    jlpt: z.string().regex(/^N[1-5]$/),
+    theme: z.string(), // to be extra strict we could do z.templateLiteral([z.enum(themes)])
+});
+
+export type readingForm = z.infer<typeof readingFormSchema>;

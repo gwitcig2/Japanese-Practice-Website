@@ -3,7 +3,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@src/components/ui/input.tsx";
 import { Button } from "@src/components/ui/button.tsx";
 import { useForm } from "react-hook-form";
-import { type loginForm, loginFormSchema } from "@shared/authSchemas.ts";
+import { type loginForm, loginFormSchema } from "@shared/formSchemas.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 
