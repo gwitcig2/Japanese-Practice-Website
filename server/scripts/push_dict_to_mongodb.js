@@ -3,27 +3,12 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import path from "path";
 import { fileURLToPath } from "url";
+import Word from "../models/Word.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
-
-const wordSchema = new mongoose.Schema({
-    entry_id: String,
-    kanji: [String],
-    reading: [String],
-    senses: [{
-        pos: [String],
-        meanings: [String],
-        misc: [String],
-        info: [String],
-        appliesToKanji: [String],
-        appliesToKana: [String],
-    }],
-});
-
-const Word = mongoose.model('Word', wordSchema);
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log('Connected to MongoDB');
@@ -40,7 +25,6 @@ function processJsonFile() {
     console.log("JMDict successfully parsed. Processing...");
 
     const processedEntries = jmdict.words.map(entry => ({
-        entry_id: entry.id,
         kanji: entry.kanji.map(k => k.text || k),
         reading: entry.kana.map(k => k.text),
         senses: entry.sense.map(s => ({
