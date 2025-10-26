@@ -1,6 +1,5 @@
 
 import { grabParagraphFromDB } from "../services/reading/grabParagraph.js";
-import { tokenizeParagraph } from "../services/reading/tokenizer.js";
 import { normalizeTokens } from "../services/reading/normalizeTokens.js";
 import { addEnglishDefinitions } from "../services/reading/toEnglish.js";
 import { tokenize } from "kuromojin";
@@ -33,30 +32,15 @@ describe("processReading", () => {
 
             const paragraph = await grabParagraphFromDB();
 
-            const startKuromoji = performance.now();
-            const initTokens = await tokenizeParagraph(paragraph);
-            const endKuromoji = performance.now();
-            const kuromojiDuration = endKuromoji - startKuromoji;
+            const initTokens = await tokenize(paragraph);
 
             const normalizedTokens = await normalizeTokens(initTokens, paragraph);
 
             const withDefinitions = await addEnglishDefinitions(normalizedTokens);
 
-            console.log(`Runtime of setupReading with Kuromoji: ${kuromojiDuration}`);
-
-            const paragraph2 = await grabParagraphFromDB();
-
-            const startKuromojin = performance.now();
-            const initTokens2 = await tokenize(paragraph2);
-            const endKuromojin = performance.now();
-
-            const normalizedTokens2 = await normalizeTokens(initTokens2, paragraph2);
-
-            const withDefinitions2 = await addEnglishDefinitions(normalizedTokens2);
-            const kuromojinDuration = endKuromojin - startKuromojin;
-
-            console.log(`Runtime of setupReading with Kuromojin: ${kuromojinDuration}`);
-
+            for (const definition of withDefinitions) {
+                console.log(JSON.stringify(definition, null, 2));
+            }
 
         } catch (error) {
             console.log(error);
