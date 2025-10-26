@@ -3,6 +3,7 @@ import { grabParagraphFromDB } from "../services/reading/grabParagraph.js";
 import { tokenizeParagraph } from "../services/reading/tokenizer.js";
 import { normalizeTokens } from "../services/reading/normalizeTokens.js";
 import { addEnglishDefinitions } from "../services/reading/toEnglish.js";
+import { tokenize } from "kuromojin";
 import { fileURLToPath } from "url";
 import path from "path";
 import dotenv from "dotenv";
@@ -18,6 +19,10 @@ await mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("Connected to MongoDB"))
     .catch((err) => console.error("MongoDB Connection Error:", err));
 
+afterAll(async () => {
+    await mongoose.disconnect();
+});
+
 describe("processReading", () => {
 
     test("The pipeline completes without error", async () => {
@@ -25,33 +30,34 @@ describe("processReading", () => {
         let success = 1;
 
         try {
+
             const paragraph = await grabParagraphFromDB();
 
-            console.log("Paragraph:" + paragraph);
-
+            const startKuromoji = performance.now();
             const initTokens = await tokenizeParagraph(paragraph);
-
-            for (const token of initTokens) {
-
-                console.log(token.basic_form);
-
-            }
+            const endKuromoji = performance.now();
+            const kuromojiDuration = endKuromoji - startKuromoji;
 
             const normalizedTokens = await normalizeTokens(initTokens, paragraph);
 
-            for (const token of normalizedTokens) {
-
-                console.log(token.basic_form);
-
-            }
-
             const withDefinitions = await addEnglishDefinitions(normalizedTokens);
 
-            for (const definition of withDefinitions) {
+            console.log(`Runtime of setupReading with Kuromoji: ${kuromojiDuration}`);
 
-                console.log(JSON.stringify(definition, null, 2));
+            const paragraph2 = await grabParagraphFromDB();
 
-            }
+            const startKuromojin = performance.now();
+            const initTokens2 = await tokenize(paragraph2);
+            const endKuromojin = performance.now();
+
+            const normalizedTokens2 = await normalizeTokens(initTokens2, paragraph2);
+
+            const withDefinitions2 = await addEnglishDefinitions(normalizedTokens2);
+            const kuromojinDuration = endKuromojin - startKuromojin;
+
+            console.log(`Runtime of setupReading with Kuromojin: ${kuromojinDuration}`);
+
+
         } catch (error) {
             console.log(error);
             success = 0;

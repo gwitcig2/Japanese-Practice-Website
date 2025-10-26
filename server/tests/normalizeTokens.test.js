@@ -1,11 +1,11 @@
 
-import { tokenizeParagraph } from "../services/reading/tokenizer.js";
+import { tokenize } from "kuromojin";
 import { potentialToDictionary } from "../services/reading/normalizeTokens.js";
 
 describe("potentialToDictionary", () => {
     test("Converts potential-form u-verbs back to dictionary-form", async () => {
 
-        const tokens = await tokenizeParagraph(
+        const tokens = await tokenize(
             "買える、行ける、踊れる、話せる、待てる、死ねる、読める、作れる、泳げる、遊べる。"
         );
 
@@ -46,7 +46,7 @@ describe("potentialToDictionary", () => {
 
     test("Mutates the token.basic_form field in a simple sentence", async () => {
 
-        const tokens = await tokenizeParagraph("私は東京に行ける。");
+        const tokens = await tokenize("私は東京に行ける。");
 
         const expected = [
             { basic_form: "私"},
