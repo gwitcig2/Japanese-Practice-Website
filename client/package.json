@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --config vite.config.ts",
-    "build": "vite build --config vite.config.ts"
+    "dev": "vite",
+    "build": "vite build",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
