@@ -26,11 +26,11 @@
     /* shadcn config */
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["./client/src/*"],
-      "@shared/*": ["./shared/*"]
+      "@src/*": ["./src/*"],
+      "@shared/*": ["../shared/*"]
     }
   },
   "include": [
-    "client/src"
+    "src"
   ]
 }
