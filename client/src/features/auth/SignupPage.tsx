@@ -4,11 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@src/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-// @ts-ignore
-import { signupFormSchema } from "@shared/formSchemas.js";
-import { z } from "zod";
-
-type signupForm = z.infer<typeof signupFormSchema>;
+import { signupFormSchema, type signupForm } from "@kanpeki/form-schemas";
 
 export default function SignupPage() {
 

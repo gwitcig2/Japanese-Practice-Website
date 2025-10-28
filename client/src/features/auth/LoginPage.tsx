@@ -3,12 +3,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@src/components/ui/input.tsx";
 import { Button } from "@src/components/ui/button.tsx";
 import { useForm } from "react-hook-form";
-// @ts-ignore
-import { loginFormSchema } from "@shared/formSchemas.js";
+import { loginFormSchema, type loginForm } from "@kanpeki/form-schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-type loginForm = z.infer<typeof loginFormSchema>;
 
 export default function LoginPage() {
 

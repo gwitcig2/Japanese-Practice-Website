@@ -1,0 +1,19 @@
+{
+  "name": "@kanpeki/form-schemas",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "zod": "^4.1.11"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/formSchemas.ts",
+      "default": "./dist/formSchemas.js"
+    }
+  }
+}

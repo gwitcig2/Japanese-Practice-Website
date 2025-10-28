@@ -6,12 +6,8 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@sr
 import {useForm} from "react-hook-form";
 import {useState, useEffect} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
-// @ts-ignore
-import { readingFormSchema } from "@shared/formSchemas.js";
+import { readingFormSchema, type readingForm } from "@kanpeki/form-schemas";
 import { getRandomThemes } from "./themes.ts";
-import {z} from "zod";
-
-type readingForm = z.infer<typeof readingFormSchema>;
 
 export default function CustomizeReading() {
 
