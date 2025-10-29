@@ -5,10 +5,10 @@
   "type": "module",
   "packageManager": "pnpm@10.19.0",
   "scripts": {
-    "dev": "pnpm -r --parallel run dev",
-    "build": "pnpm -r run build",
-    "start": "pnpm --filter server start",
-    "test": "pnpm -r run test"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
@@ -16,6 +16,7 @@
     "cross-env": "^10.0.0",
     "eslint": "^9.33.0",
     "globals": "^16.3.0",
+    "prettier": "^3.6.2",
     "turbo": "^2.5.8",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1"
