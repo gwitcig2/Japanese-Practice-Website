@@ -16,11 +16,6 @@
       "persistent": true,
       "cache": false
     },
-    "format": {
-      "cache": true,
-      "inputs": ["**/*.{js,jsx,ts,tsx,json,md,css}"],
-      "outputs": []
-    },
     "test": {
       "inputs": ["$TURBO_DEFAULTS$", "$TURBO_ROOTS$/vitest.config.ts"],
       "dependsOn": ["transit", "@kanpeki/vitest-config#build"],
