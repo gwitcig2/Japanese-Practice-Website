@@ -79,7 +79,7 @@ you struggle with most.
 
 ## Tech Stack Overview
 
-Kanpeki is a monorepo built on a [MongoDB](https://www.mongodb.com/docs/), [Express](https://expressjs.com/), [React](https://react.dev/learn) and [Node.js](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) (MERN) tech stack.
+Kanpeki is a monorepo built on a [MongoDB](https://www.mongodb.com/docs/), [Express.js](https://expressjs.com/), [React](https://react.dev/learn) and [Node.js](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs) (MERN) tech stack.
 
 The front-end (`/web`) is structured to be a single-page application (SPA) built with [React](https://react.dev/learn), [TypeScript](https://www.typescriptlang.org/docs/), 
 and [Tailwind](https://tailwindcss.com/docs/installation/using-vite). [Vite](https://vite.dev/guide/) is used for hosting the dev server and building for deployment to [Vercel](https://vercel.com/docs). 
@@ -90,7 +90,7 @@ Some of the other key libraries used in `/web`:
 - [react-router-dom](https://reactrouter.com/home)
 - [axios](https://axios-http.com/docs/intro)
 
-The back-end (`/api`) is an [Express](https://expressjs.com/) server that uses REST APIs to handle CRUD operations on resources, [JWT](https://auth0.com/docs/secure/tokens/json-web-tokens) authorization, and
+The back-end (`/api`) is an [Express.js](https://expressjs.com/) server that uses REST APIs to handle CRUD operations on resources, [JWT](https://auth0.com/docs/secure/tokens/json-web-tokens) authorization, and
 executing services like the paragraph creation pipeline. The [Mongoose ODM](https://mongoosejs.com/docs/index.html) is used to handle transactions with the remote [MongoDB](https://www.mongodb.com/docs/), hosted
 on Atlas. The DB itself stores the [JMDict](#the-japanese-multilingual-dictionary-jmdict) in JSON format so we can remotely query it for dictionary data. Otherwise, it just holds basic user data, including
 their flashcard collections and all the readings they have created over the last 7 days. In the short-term, `/api` will be deployed to [Railway](https://docs.railway.com/quick-start) for production,
@@ -98,10 +98,10 @@ but long-term, it would be better to containerize `/api` with [Docker](https://d
 
 Some of the other key libraries used in `/api`:
 - [kuromojin](https://github.com/azu/kuromojin) (a handy wrapper for the [kuromoji](https://github.com/takuyaa/kuromoji.js) tokenizer)
-- [bcrypt](https://www.npmjs.com/package/bcrypt) (hash passwords and refresh tokens before storing them in the DB)
+- [bcrypt](https://www.npmjs.com/package/bcrypt) 
 - [openai](https://platform.openai.com/docs/quickstart?context=node)
 
-Shared code between the apps is held in `/packages`. Right now these just hold [zod](https://zod.dev/) schemas and global config for [TypeScript](https://www.typescriptlang.org/docs/) and [eslint](https://typescript-eslint.io/getting-started/).
+Shared code between the apps is held in `/packages`. Right now these just hold [zod](https://zod.dev/) form schemas and global config for [TypeScript](https://www.typescriptlang.org/docs/) and [eslint](https://typescript-eslint.io/getting-started/).
 
 On the development side of things, [Turborepo](https://turborepo.com/docs) is used to enhance monorepo management and speed up CI/CD via GitHub. [pnpm](https://pnpm.io/motivation) is the preferred package manager for its speedy downloads, efficient disk-usage, and simple monorepo support. 
 [Notion](https://www.notion.com/) is used for task management and maintaining the devlog. And lastly, [Vitest](https://vitest.dev/guide/) is used for unit testing the project.
@@ -119,23 +119,26 @@ On the development side of things, [Turborepo](https://turborepo.com/docs) is us
           - `/reading` - Sets up the pages for customizing the prompt to create a Japanese reading, make an API request to generate the reading, and then route to the page that displays the reading.
         - `/utils` - TypeScript function libraries that may need to be used across the front-end.
     - `/api` - Express server with REST APIs.
-      - `/controllers` - MVC-styled controllers that handle requests.
-      - `/middleware` - Filters for validating requests and logging output.
-      - `/models` - Mongoose schemas.
-      - `/routes` - Sets up routes and routers for API requests.
-      - `/scripts` - Code for performnig one-off tasks.
-      - `/services` - Dedicated logic for API requests.
-        - `/ai` - Modularize prompts to ChatGPT's `4o-mini` model.
-        - `/deck` - CRUD functions for flashcard decks.
-        - `/flashcard` - CRUD operation functions for flashcards.
-        - `/jwt` - Functions that create, verify, and revoke JWTs.
-        - `/reading` - Functions that set up the paragraph creation pipeline.
-        - `/user` - CRUD functions for user accounts.
+      - `/src`
+        - `/controllers` - MVC-styled controllers that handle requests.
+        - `/middleware` - Filters for validating requests, logging output, etc.
+        - `/models` - Mongoose schemas.
+        - `/routes` - Sets up routes and routers for requests.
+        - `/scripts` - Code for performing one-off tasks.
+        - `/services` - Dedicated logic for API requests.
+          - `/ai` - Modularize prompts to ChatGPT's `4o-mini` model.
+          - `/deck` - CRUD functions for flashcard decks.
+          - `/flashcard` - CRUD operation functions for flashcards.
+          - `/jwt` - Functions that create, verify, and revoke JWTs.
+          - `/reading` - Functions that set up the paragraph creation pipeline.
+          - `/user` - CRUD functions for user accounts.
+        - `server.js` - Express.js entry point 
       - `/tests` - Vitest unit tests verifying the APIs work as intended
-      - `server.js` 
-  - `/packages` - Shared code and config between the `/apps`
-    - `/formSchemas` - `zod` form schemas
-  - `turbo.json` - Config for Turborepo. Essentially tells it how to run scripts.
+  - `/packages` - Shared code and config for the `/apps`
+    - `/formSchemas` - `zod` form schemas and their inferred types
+    - `/eslint-config` - global config for `eslint`
+    - `/ts-config` - global config for TypeScript
+  - `turbo.json` - Config for Turborepo
 
 
 ## API Request Overview

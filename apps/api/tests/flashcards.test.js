@@ -1,10 +1,10 @@
 import request from "supertest";
 import mongoose from "mongoose";
-import app from "../server.js";
+import app from "../src/server.js";
 
-import Flashcard from "../models/Flashcard.js";
-import FlashcardDeck from "../models/FlashcardDeck.js";
-import User from "../models/User.js";
+import Flashcard from "../src/models/Flashcard.js";
+import FlashcardDeck from "../src/models/FlashcardDeck.js";
+import User from "../src/models/User.js";
 import {expect} from "@jest/globals";
 
 const testUser = {

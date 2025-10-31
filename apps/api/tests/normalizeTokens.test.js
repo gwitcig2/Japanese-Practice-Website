@@ -1,6 +1,6 @@
 
 import { tokenize } from "kuromojin";
-import { potentialToDictionary } from "../services/reading/normalizeTokens.js";
+import { potentialToDictionary } from "../src/services/reading/normalizeTokens.js";
 
 describe("potentialToDictionary", () => {
     test("Converts potential-form u-verbs back to dictionary-form", async () => {

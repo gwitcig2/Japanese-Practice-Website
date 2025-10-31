@@ -1,7 +1,7 @@
 
-import { grabParagraphFromDB } from "../services/reading/grabParagraph.js";
-import { normalizeTokens } from "../services/reading/normalizeTokens.js";
-import { addEnglishDefinitions } from "../services/reading/toEnglish.js";
+import { grabParagraphFromDB } from "../src/services/reading/grabParagraph.js";
+import { normalizeTokens } from "../src/services/reading/normalizeTokens.js";
+import { addEnglishDefinitions } from "../src/services/reading/toEnglish.js";
 import { tokenize } from "kuromojin";
 import { fileURLToPath } from "url";
 import path from "path";
