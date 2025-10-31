@@ -1,7 +1,7 @@
 packages:
   - 'web'
   - 'api'
-  - 'shared/*'
+  - 'packages/*'
 
 onlyBuiltDependencies:
   - bcrypt
