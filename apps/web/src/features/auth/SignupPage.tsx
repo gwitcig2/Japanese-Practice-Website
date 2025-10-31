@@ -1,7 +1,7 @@
-import { Button } from "@src/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@src/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@src/components/ui/form"
-import { Input } from "@src/components/ui/input"
+import { Button } from "@src/components/ui/button.tsx"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@src/components/ui/card.tsx"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@src/components/ui/form.tsx"
+import { Input } from "@src/components/ui/input.tsx"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { signupFormSchema, type signupForm } from "@kanpeki/form-schemas";

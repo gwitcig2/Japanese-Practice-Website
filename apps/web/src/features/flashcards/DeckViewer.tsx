@@ -1,11 +1,11 @@
 
 import { useEffect, useState } from "react";
 // import axios from "axios";
-import { Button } from "@src/components/ui/button";
+import { Button } from "@src/components/ui/button.tsx";
 import { FlashcardCard } from "./FlashcardCard.tsx";
-import { Card } from "@src/components/ui/card";
+import { Card } from "@src/components/ui/card.tsx";
 import { motion, AnimatePresence } from "framer-motion";
-import { Progress } from "@src/components/ui/progress";
+import { Progress } from "@src/components/ui/progress.tsx";
 
 interface Flashcard {
     _id: string;

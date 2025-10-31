@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@src/components/ui/card";
+import { Card, CardContent } from "@src/components/ui/card.tsx";
 
 interface FlashcardCardProps {
     front: string;
