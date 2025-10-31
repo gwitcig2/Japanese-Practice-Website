@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 });
 
 function processJsonFile() {
-    const rawData = fs.readFileSync('./server/scripts/jmdict-eng-3.6.1.json');
+    const rawData = fs.readFileSync('./api/scripts/jmdict-eng-3.6.1.json');
 
     const jmdict = JSON.parse(rawData);
 
