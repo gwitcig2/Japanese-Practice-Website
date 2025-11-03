@@ -15,8 +15,10 @@
   },
   "exports": {
     ".": {
-      "types": "./src/formSchemas.ts",
+      "types": "./dist/formSchemas.d.ts",
       "default": "./dist/formSchemas.js"
     }
-  }
+  },
+  "main": "./dist/formSchemas.js",
+  "types": "./dist/formSchemas.d.ts"
 }
