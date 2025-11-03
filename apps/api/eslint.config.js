@@ -1,4 +1,3 @@
-// @ts-check
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import n from 'eslint-plugin-n'

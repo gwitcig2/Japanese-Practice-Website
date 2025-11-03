@@ -6,13 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint ",
+    "lint": "eslint .",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@kanpeki/form-schemas": "workspace:*",
-
     "@hookform/resolvers": "^5.2.2",
+    "@kanpeki/form-schemas": "workspace:*",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-progress": "^1.1.7",
     "@radix-ui/react-select": "^2.2.6",
@@ -37,12 +36,13 @@
   "devDependencies": {
     "@kanpeki/eslint-config": "workspace:*",
     "@kanpeki/typescript-config": "workspace:*",
-
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.5.0",
+    "typescript-eslint": "^8.46.2",
     "vite": "^7.1.2"
   }
 }
