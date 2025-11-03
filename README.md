@@ -137,7 +137,9 @@ On the development side of things, [Turborepo](https://turborepo.com/docs) is us
   - `/packages` - Shared code and config for the `/apps`
     - `/formSchemas` - `zod` form schemas and their inferred types
     - `/eslint-config` - global config for `eslint`
-    - `/ts-config` - global config for TypeScript
+    - `/ts-config` - global configs for TypeScript
+      - `base.json` - Rules that all TypeScript code must follow
+      - `cip.json` - Rules for compiled internal packages (particularly for compiling them)
   - `turbo.json` - Config for Turborepo
 
 
@@ -202,7 +204,7 @@ Now ensure there's a `.env` at the root and it contains valid variables. There's
 a visual outline below:
 
 ```env
-NODE_ENV= ["dev" | "test" | "prod"] (default "dev")
+NODE_ENV= "dev" | "test" | "prod" (default "dev")
 SERVER_PORT= whatever port you want for the Express server
 VITE_CLIENT_PORT= whatever port you want for the Vite server
 JWT_KEY= unique SHA-256 hash

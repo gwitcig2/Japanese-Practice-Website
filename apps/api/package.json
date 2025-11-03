@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@kanpeki/eslint-config": "workspace:*",
+    "@kanpeki/typescript-config": "workspace:*",
 
     "@jest/globals": "^30.1.2",
     "eslint-plugin-n": "^17.23.1",

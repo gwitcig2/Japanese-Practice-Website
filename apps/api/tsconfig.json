@@ -1,25 +1,14 @@
 {
+  "extends": "@kanpeki/typescript-config/base.json",
   "compilerOptions": {
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "ES2022",
-    "verbatimModuleSyntax": true,
     "allowJs": true,
-    "moduleDetection": "force",
-    "resolveJsonModule": true,
-
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
 
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "outDir": "dist",
-    "rootDir": "src",
     "sourceMap": true,
 
-    "lib": ["ES2022"],
-
-
+    "lib": ["ES2022"]
   },
   "include": ["src"]
 }

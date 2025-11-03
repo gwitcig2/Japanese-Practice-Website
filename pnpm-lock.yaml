@@ -84,6 +84,9 @@ importers:
       '@kanpeki/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@kanpeki/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       eslint-plugin-n:
         specifier: ^17.23.1
         version: 17.23.1(eslint@9.38.0(jiti@2.6.1))(typescript@5.8.3)
@@ -172,6 +175,9 @@ importers:
       '@kanpeki/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@kanpeki/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/react':
         specifier: ^19.1.10
         version: 19.2.2
@@ -214,6 +220,12 @@ importers:
       zod:
         specifier: ^4.1.11
         version: 4.1.12
+    devDependencies:
+      '@kanpeki/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+
+  packages/typescript-config: {}
 
 packages:
 

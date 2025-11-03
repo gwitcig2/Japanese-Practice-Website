@@ -15,14 +15,6 @@
     "dev": {
       "persistent": true,
       "cache": false
-    },
-    "test": {
-      "inputs": ["$TURBO_DEFAULTS$", "$TURBO_ROOTS$/vitest.config.ts"],
-      "dependsOn": ["transit", "@kanpeki/vitest-config#build"],
-      "outputs": ["coverage.json"]
-    },
-    "transit": {
-      "dependsOn": ["^transit"]
     }
   }
 }
