@@ -1,0 +1,14 @@
+{
+  "extends": "@kanpeki/typescript-config/base.json",
+  "compilerOptions": {
+    "allowJs": true,
+
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "outDir": "dist",
+    "sourceMap": true,
+
+    "lib": ["ES2022"]
+  },
+  "include": ["src"]
+}
