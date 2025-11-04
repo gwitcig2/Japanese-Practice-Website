@@ -11,6 +11,7 @@
     "lint": "turbo run lint"
   },
   "devDependencies": {
+    "@kanpeki/vitest-config": "workspace:*",
     "cross-env": "^10.0.0",
     "prettier": "^3.6.2",
     "turbo": "^2.5.8",
