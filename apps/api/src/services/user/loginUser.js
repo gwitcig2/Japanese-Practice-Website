@@ -8,17 +8,16 @@ import bcrypt from "bcrypt";
  *
  * If no valid user is found OR the passwords don't match, throws an Error.
  *
- * @param email
- * @param username
+ * @param identifier
  * @param password
  * @returns {Promise<{token: (*)}>}
  */
-export async function loginUser(email, username, password) {
+export async function loginUser(identifier, password) {
 
     const user = await User.findOne({
         $or: [
-            { email: email },
-            { username: username }
+            { email: identifier },
+            { username: identifier }
         ]
     });
     if (!user) {

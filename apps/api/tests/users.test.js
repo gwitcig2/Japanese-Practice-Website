@@ -2,7 +2,7 @@ import request from "supertest";
 import mongoose from "mongoose";
 import app from "../src/server.js";
 import User from "../src/models/User.js";
-import {expect} from "@jest/globals";
+import { afterAll, describe, expect, test } from "vitest";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 

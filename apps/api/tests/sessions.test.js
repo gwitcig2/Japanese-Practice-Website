@@ -1,12 +1,12 @@
 import request from "supertest";
 import app from "../src/server.js";
-import {expect} from "@jest/globals";
+import { afterAll, describe, expect, test } from "vitest";
+
 import User from "../src/models/User.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-let refreshToken;
 let dbUser;
 let userId;
 let jwtToken;
@@ -30,7 +30,7 @@ afterAll(async () => {
 
 describe("Sessions routes", () => {
 
-    test("Create a test user to log into with POST /users", async () => {
+    test("Create a test user to log in to with POST /users", async () => {
 
         await request(app)
             .post("/users")
@@ -46,7 +46,10 @@ describe("Sessions routes", () => {
 
         const res = await request(app)
             .post("/sessions")
-            .send(testUser)
+            .send({
+                identifier: "iAmTest@example.com",
+                password: "ThisIsMyPassword"
+            })
             .expect(200);
 
         // Checking if the user was given a valid access JWT
@@ -84,13 +87,22 @@ describe("Sessions routes", () => {
 
     });
 
-    test("POST /sessions returns code 404 if its given an email or username that doesn't exist", async () => {
+    test("POST /sessions returns code 400 if its given input doesn't follow the Zod schema's constraints", async () => {
         await request(app)
             .post("/sessions")
             .send({
-                email: "letMeIn@yourHouse.com",
-                username: "youWillGrantMeEntryOrElse",
+                identifier: "youWillGrantMeEntryOrElse",
                 password: "IMeanIfIHAVEtoHaveAPasswordSoBeIt",
+            })
+            .expect(400);
+    });
+
+    test("POST /sessions returns code 404 if it cannot find a given identifier", async () => {
+        await request(app)
+            .post("/sessions")
+            .send({
+                identifier: "notARealDB",
+                password: "notARealPasswordEither!",
             })
             .expect(404);
     });
@@ -100,8 +112,7 @@ describe("Sessions routes", () => {
         await request(app)
             .post("/sessions")
             .send({
-                email: "iAmTest@example.com",
-                username: "theBestTester",
+                identifier: "theBestTester",
                 password: "ICantRememberIfThisIsMyPasswordOrNot",
             })
             .expect(401);
@@ -123,7 +134,7 @@ describe("Sessions routes", () => {
 
     });
 
-    test("PUT /sessions returns code 401 if its not given a refresh JWT", async () => {
+    test("PUT /sessions returns code 401 if it's not given a refresh JWT", async () => {
 
         await request(app)
             .put("/sessions")
@@ -131,7 +142,7 @@ describe("Sessions routes", () => {
 
     });
 
-    test("PUT /sessions returns code 401 if its given an invalid key in a refresh JWT", async () => {
+    test("PUT /sessions returns code 401 if it's given an invalid key in a refresh JWT", async () => {
 
         const susToken = jwt.sign({ userId }, "imREALLYhopingThisIsTheRightKey", { expiresIn: "7d" });
 

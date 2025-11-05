@@ -1,6 +1,7 @@
 
 import { tokenize } from "kuromojin";
 import { potentialToDictionary } from "../src/services/reading/normalizeTokens.js";
+import { describe, expect, test } from "vitest";
 
 describe("potentialToDictionary", () => {
     test("Converts potential-form u-verbs back to dictionary-form", async () => {
@@ -8,10 +9,6 @@ describe("potentialToDictionary", () => {
         const tokens = await tokenize(
             "買える、行ける、踊れる、話せる、待てる、死ねる、読める、作れる、泳げる、遊べる。"
         );
-
-        for (const token of tokens) {
-            console.log(token);
-        }
 
         const verbs = tokens
             .filter(t => t.pos === "動詞")
@@ -46,7 +43,7 @@ describe("potentialToDictionary", () => {
 
     test("Mutates the token.basic_form field in a simple sentence", async () => {
 
-        const tokens = await tokenize("私は東京に行ける。");
+        const tokens = await tokenize("私は東京に行けます。");
 
         const expected = [
             { basic_form: "私"},
@@ -64,19 +61,17 @@ describe("potentialToDictionary", () => {
 
             if (token.pos === "動詞") {
 
-                console.log(token);
 
                 if (
                     token.pos_detail_1 === "自立" &&
-                    token.conjugated_type === "一段" &&
-                    token.conjugated_form === "基本形"
+                    token.conjugated_type === "一段"
                 ) {
-                    token.basic_form = potentialToDictionary(token.basic_form);
+                    tokens[i] = { ...tokens[i], basic_form: potentialToDictionary(tokens[i].basic_form)};
                 }
 
             }
 
-            expect(token).toMatchObject(expected[i]);
+            expect(tokens[i]).toMatchObject(expected[i]);
 
             i++;
 

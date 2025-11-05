@@ -7,6 +7,7 @@ import {
 } from "../services/jwt/jwtServices.js";
 import jwt from "jsonwebtoken";
 import { loginFormSchema } from "@kanpeki/form-schemas";
+import {ZodError} from "zod";
 
 /**
  * Handles logging a user in to the website and giving them a valid JWT token if authorized.
@@ -18,9 +19,9 @@ import { loginFormSchema } from "@kanpeki/form-schemas";
 export async function login(req, res){
 
     try {
-        const validLogin = await loginFormSchema.parse(req.body);
-        const { email, username, password } = validLogin;
-        const user = await loginUser(email, username, password);
+        const validLogin = loginFormSchema.parse(req.body);
+        const { identifier, password } = validLogin;
+        const user = await loginUser(identifier, password);
 
         const accessToken = generateAccessToken(user._id);
         const refreshToken = await generateRefreshToken(user._id);
@@ -34,6 +35,10 @@ export async function login(req, res){
         res.status(200).json({ accessToken });
 
     } catch (err) {
+        if (err instanceof ZodError) {
+            res.status(400).json({ error: err.message });
+        }
+
         if (err.status) {
             res.status(err.status).json({ error: err.message });
         }

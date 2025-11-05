@@ -43,7 +43,7 @@ export async function normalizeTokens(tokens, paragraph) {
                 token.pos_detail_1 === "自立" &&
                 token.conjugated_type === "一段"
             ) {
-                token.basic_form = potentialToDictionary(token.basic_form);
+                tokens[i] = { ...token, basic_form: potentialToDictionary(token.basic_form)};
             }
 
         }
@@ -159,7 +159,7 @@ async function disambiguateWithGPT(paragraph, tokens, tokensToDisambiguate) {
 
     for (const tokenA of tokensToDisambiguate) {
 
-        tokens[tokenA.tokenIndex].basic_form = corrections[i];
+        tokens[tokenA.tokenIndex] = { ...tokens[tokenA.tokenIndex], basic_form: corrections[i]};
 
     }
 

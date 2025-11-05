@@ -5,12 +5,12 @@ import app from "../src/server.js";
 import Flashcard from "../src/models/Flashcard.js";
 import FlashcardDeck from "../src/models/FlashcardDeck.js";
 import User from "../src/models/User.js";
-import {expect} from "@jest/globals";
+import { beforeAll, afterAll, describe, expect, test } from "vitest";
 
 const testUser = {
     email: "flashcardWizard@example.com",
     username: "greatestCardDealer",
-    password: "GoRams",
+    password: "GoRamsMan!",
 };
 
 let jwtToken;
@@ -45,10 +45,13 @@ describe("Flashcard routes", () => {
 
         const loginRes = await request(app)
             .post("/sessions")
-            .send(testUser)
+            .send({
+                identifier: testUser.username,
+                password: testUser.password,
+            })
             .expect(200);
 
-        jwtToken = loginRes.body.token;
+        jwtToken = loginRes.body.accessToken;
 
     });
 

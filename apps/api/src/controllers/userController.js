@@ -4,6 +4,7 @@ import {updateUser} from "../services/user/updateUser.js";
 import {generateAccessToken, generateRefreshToken} from "../services/jwt/jwtServices.js";
 import User from "../models/User.js";
 import { signupFormSchema } from "@kanpeki/form-schemas";
+import {ZodError} from "zod";
 
 /**
  * Handles creating a user's account, adding it to the MongoDB, and automatically logging the user in.
@@ -30,7 +31,10 @@ export async function signup(req, res){
 
         res.status(201).json({ accessToken });
     } catch (error) {
-        res.status(400).json({ error: `Account creation error: ${error.message}` });
+        if (error instanceof ZodError) {
+            res.status(400).json({ error: `Account creation error: ${error.message}` });
+        }
+        res.status(500).json({ error: "Internal Server Error" });
     }
 
 }
