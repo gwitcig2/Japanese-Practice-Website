@@ -101,10 +101,10 @@ Some of the other key libraries used in `/api`:
 - [bcrypt](https://www.npmjs.com/package/bcrypt) 
 - [openai](https://platform.openai.com/docs/quickstart?context=node)
 
-Shared code between the apps is held in `/packages`. Right now these just hold [zod](https://zod.dev/) form schemas and global config for [TypeScript](https://www.typescriptlang.org/docs/) and [eslint](https://typescript-eslint.io/getting-started/).
+Shared code between the apps is held in `/packages`. Right now these just hold [zod](https://zod.dev/) form schemas and global config for [TypeScript](https://www.typescriptlang.org/docs/), [eslint](https://typescript-eslint.io/getting-started/), and [Vitest](https://vitest.dev/guide/).
 
-On the development side of things, [Turborepo](https://turborepo.com/docs) is used to enhance monorepo management and speed up CI/CD via GitHub. [pnpm](https://pnpm.io/motivation) is the preferred package manager for its speedy downloads, efficient disk-usage, and simple monorepo support. 
-[Notion](https://www.notion.com/) is used for task management and maintaining the devlog. And lastly, [Vitest](https://vitest.dev/guide/) is used for unit testing the project.
+On the development side of things, [Turborepo](https://turborepo.com/docs) is used to enhance monorepo management and speed up CI/CD through GitHub and GitHub Actions. [pnpm](https://pnpm.io/motivation) is the preferred package manager for its speedy downloads, efficient disk-usage, and simple monorepo support. 
+[Notion](https://www.notion.com/) is used for project management and maintaining the devlog. And lastly, [Vitest](https://vitest.dev/guide/) is used for unit testing the project.
 
 
 
@@ -221,11 +221,12 @@ Quick outline of root directory tasks to execute in the terminal:
   - `pnpm build` or `turbo build` to build the entire monorepo for deployment
   - `pnpm lint` or `turbo lint` to perform linting of the entire monorepo
   - `pnpm test` or `turbo test` to execute Vitest unit tests
-  - `pnpm check-types` or `turbo check-types` to type-check TypeScript code with `tsc`
+    - To run just one unit test, use `pnpm dlx vitest *.test.{js,ts}}` (no need to `cd` to the `tests` directory)
+  - `pnpm check-types` or `turbo check-types` to do type-checking with `tsc --noEmit`
 
 `turbo` can run multiple tasks in parallel (e.g. `turbo lint build check-types`).
 
-If you need to perform tasks only in certain directories, either use filters or `cd` to the directory you're working in.
+If you need to perform tasks only in certain directories, either use `turbo --filter` or `cd` to the directory you're working in and use `pnpm` to run tasks.
 
 ## Copyright Resources
 
