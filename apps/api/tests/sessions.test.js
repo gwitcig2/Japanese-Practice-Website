@@ -13,9 +13,9 @@ let jwtToken;
 let refreshCookie;
 
 const testUser = {
-    email: "iAmTest@example.com",
-    username: "theBestTester",
-    password: "ThisIsMyPassword",
+    email: "iAmTest2@example.com",
+    username: "theBestTester2",
+    password: "KoreWaPasswordDa",
 };
 
 afterAll(async () => {
@@ -47,8 +47,8 @@ describe("Sessions routes", () => {
         const res = await request(app)
             .post("/sessions")
             .send({
-                identifier: "iAmTest@example.com",
-                password: "ThisIsMyPassword"
+                identifier: "iAmTest2@example.com",
+                password: "KoreWaPasswordDa"
             })
             .expect(200);
 
@@ -112,7 +112,7 @@ describe("Sessions routes", () => {
         await request(app)
             .post("/sessions")
             .send({
-                identifier: "theBestTester",
+                identifier: "theBestTester2",
                 password: "ICantRememberIfThisIsMyPasswordOrNot",
             })
             .expect(401);

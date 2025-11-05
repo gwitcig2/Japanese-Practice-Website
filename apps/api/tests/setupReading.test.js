@@ -40,8 +40,8 @@ describe("processReading", () => {
 
             const withDefinitions = await addEnglishDefinitions(normalizedTokens);
 
-            for (const definition of withDefinitions) {
-                console.log(JSON.stringify(definition, null, 2));
+            for (const def of withDefinitions) {
+                expect(def).toHaveProperty("senses");
             }
 
         } catch (error) {

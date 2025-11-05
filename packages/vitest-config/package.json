@@ -7,8 +7,7 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./base": "./dist/configs/base.js",
-    "./node": "./dist/configs/node-config.js"
+    "./base": "./dist/configs/base.js"
   },
   "scripts": {
     "build": "tsc",
