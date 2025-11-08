@@ -200,18 +200,24 @@ After installing dependencies, it's highly recommended, but technically not requ
 This allows you to run scripts through `turbo` directly in the terminal, as opposed to running them with `pnpm` commands.
 A global `turbo` is handy for configuring CI pipelines and performing one-off tasks like `build` in specific areas of the project.
 
-Now ensure there's a `.env` at the root and it contains valid variables. There's a `zod` schema for verifying syntax, along with
-a visual outline below:
+Last step involves setting up `.env` variables if you don't have them already. Each app in `/apps` is responsible for configuring their own
+`.env` variables at their root. They must also validate the variables with a `zod` schema for type-safety. <u>There should not be a `.env` at the *project* root `/kanpeki`.</u>
+
+The `.env` for `/api` is the most sophisticated:
 
 ```env
 NODE_ENV= "dev" | "test" | "prod" (default "dev")
-SERVER_PORT= whatever port you want for the Express server
-VITE_CLIENT_PORT= whatever port you want for the Vite server
-JWT_KEY= unique SHA-256 hash
-JWT_REFRESH_KEY= unique SHA-256 hash
-VITE_API_READING=(routes to the request for the setupReading pipeline)
-CLIENT_ORIGIN=expected http origin of clients
+NODE_SERVER_PORT= whatever port you want for the Express server
+ACCESS_KEY= unique SHA-512 hash
+REFRESH_KEY= unique SHA-512 hash
+CLIENT_ORIGIN= http://localhost:5173 | https://www.kanpeki.com
 MONGO_URI= valid URI to the remote MongoDB
+```
+
+The `.env` for `/web` is a lot simpler, but each variable must be prefixed with `VITE_`:
+
+```env
+VITE_API_URL=http://localhost:5000 | https://api.kanpeki.com
 ```
 
 From here, you should be ready begin development!

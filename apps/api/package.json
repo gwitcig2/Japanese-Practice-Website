@@ -4,16 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/server.js",
+    "dev": "dotenvx run -- nodemon src/server.js",
     "start": "node src/server.js",
     "lint": "eslint .",
     "test": "vitest run"
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "^1.51.1",
     "@kanpeki/form-schemas": "workspace:*",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
@@ -22,6 +24,7 @@
     "mongodb": "^6.18.0",
     "mongoose": "^8.17.1",
     "openai": "^5.15.0",
+    "@kanpeki/env-vars": "workspace:*",
     "zod": "^4.1.11"
   },
   "devDependencies": {

@@ -1,0 +1,24 @@
+{
+  "name": "@kanpeki/env-vars",
+  "type": "module",
+  "private": true,
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./api": "./dist/api.js",
+    "./web": "./dist/web.js"
+  },
+  "dependencies": {
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@kanpeki/typescript-config": "workspace:*",
+    "@types/node": "^24.10.0"
+  }
+}
