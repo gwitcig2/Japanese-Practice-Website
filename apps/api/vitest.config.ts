@@ -6,7 +6,7 @@ export default mergeConfig(
     defineConfig({
         test: {
             environment: "node",
-            // setupFiles: ["./tests/setupTests.js"]
+            setupFiles: ["./tests/setupTests.js"]
         },
     })
 );

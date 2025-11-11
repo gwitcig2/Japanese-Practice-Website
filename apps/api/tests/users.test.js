@@ -1,10 +1,11 @@
 import request from "supertest";
-import mongoose from "mongoose";
-import app from "../src/server.js";
+import app from "../src/app.js";
 import User from "../src/models/User.js";
 import { afterAll, describe, expect, test } from "vitest";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+
+import { env } from "../src/config/env-config.js";
 
 const testUser = {
     email: "iAmTest@example.com",
@@ -27,8 +28,8 @@ afterAll(async () => {
         await User.findByIdAndDelete(dbUser._id);
     }
 
-   await mongoose.disconnect();
 });
+
 
 describe("User authentication routes", () => {
 
@@ -46,7 +47,7 @@ describe("User authentication routes", () => {
         // Checking if the user was given a valid access JWT
         expect(res.body).toHaveProperty("accessToken");
 
-        const verifyAccess = jwt.verify(res.body.accessToken, process.env.JWT_KEY);
+        const verifyAccess = jwt.verify(res.body.accessToken, env.ACCESS_KEY);
         expect(verifyAccess).toBeDefined();
         expect(verifyAccess.userId === dbUser._id.toString()).toBe(true);
 
@@ -62,7 +63,7 @@ describe("User authentication routes", () => {
             .split(";")[0]
             .split("=")[1];
 
-        const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
+        const payload = jwt.verify(refreshToken, env.REFRESH_KEY);
         expect(payload).toHaveProperty("userId");
         expect(payload.userId === dbUser._id.toString()).toBe(true);
 

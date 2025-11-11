@@ -8,6 +8,7 @@ import {
 import jwt from "jsonwebtoken";
 import { loginFormSchema } from "@kanpeki/form-schemas";
 import {ZodError} from "zod";
+import { env } from "../config/env-config.js";
 
 /**
  * Handles logging a user in to the website and giving them a valid JWT token if authorized.
@@ -28,8 +29,8 @@ export async function login(req, res){
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            secure: env.NODE_ENV === "production",
+            sameSite: env.NODE_ENV === "production" ? "strict" : "lax",
         });
 
         res.status(200).json({ accessToken });

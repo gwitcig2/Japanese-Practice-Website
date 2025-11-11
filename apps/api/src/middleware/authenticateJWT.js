@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { env } from "../config/env-config.js";
 
 /**
  *
@@ -15,7 +16,7 @@ export async function authenticateJWT(req, res, next) {
     const token = authHeader && authHeader.split(" ")[1];
     if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, process.env.JWT_KEY, (err, user) => {
+    jwt.verify(token, env.ACCESS_KEY, (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
         next();

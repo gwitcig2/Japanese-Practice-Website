@@ -1,6 +1,5 @@
 import request from "supertest";
-import mongoose from "mongoose";
-import app from "../src/server.js";
+import app from "../src/app.js";
 
 import Flashcard from "../src/models/Flashcard.js";
 import FlashcardDeck from "../src/models/FlashcardDeck.js";
@@ -26,8 +25,6 @@ afterAll(async () => {
     if (dbUser) {
         await User.findByIdAndDelete(dbUser._id);
     }
-
-    await mongoose.disconnect();
 
 });
 

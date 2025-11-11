@@ -7,10 +7,11 @@
     "dev": "dotenvx run -- nodemon src/server.js",
     "start": "node src/server.js",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "cross-env NODE_ENV=test dotenvx run -- vitest run"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
+    "@kanpeki/env-vars": "workspace:*",
     "@kanpeki/form-schemas": "workspace:*",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -24,7 +25,6 @@
     "mongodb": "^6.18.0",
     "mongoose": "^8.17.1",
     "openai": "^5.15.0",
-    "@kanpeki/env-vars": "workspace:*",
     "zod": "^4.1.11"
   },
   "devDependencies": {
@@ -35,6 +35,7 @@
     "eslint": "^9.39.1",
     "eslint-plugin-n": "^17.23.1",
     "globals": "^16.5.0",
+    "mongodb-memory-server": "^10.3.0",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.4",
     "tsx": "^4.20.6",

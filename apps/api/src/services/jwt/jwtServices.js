@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../../models/User.js";
 
+import { env } from "../../config/env-config.js";
+
 const ACCESS_EXPIRES = "15m";
 const REFRESH_EXPIRES = "7d";
 
@@ -12,7 +14,7 @@ const REFRESH_EXPIRES = "7d";
  * @returns {*}
  */
 export function generateAccessToken(userId) {
-    return jwt.sign({ userId }, process.env.JWT_KEY, { expiresIn: ACCESS_EXPIRES });
+    return jwt.sign({ userId }, env.ACCESS_KEY, { expiresIn: ACCESS_EXPIRES });
 }
 
 /**
@@ -25,7 +27,7 @@ export function generateAccessToken(userId) {
  */
 export async function generateRefreshToken(userId) {
 
-    const refreshToken = jwt.sign({ userId }, process.env.JWT_REFRESH_KEY, { expiresIn: REFRESH_EXPIRES });
+    const refreshToken = jwt.sign({ userId }, env.REFRESH_KEY, { expiresIn: REFRESH_EXPIRES });
     const hashed = await bcrypt.hash(refreshToken, 10);
 
     await User.findByIdAndUpdate(userId, {
@@ -71,7 +73,7 @@ export async function revokeRefreshToken(userId, refreshToken) {
 export async function verifyRefreshToken(refreshToken) {
 
     try {
-        const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY);
+        const payload = jwt.verify(refreshToken, env.REFRESH_KEY);
 
         const user = await User.findById(payload.userId);
         if (!user) return null;

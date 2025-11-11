@@ -1,16 +1,8 @@
 import OpenAI from "openai";
-import {fileURLToPath} from "url";
-import path from "path";
-import dotenv from "dotenv";
-
-// Remove once globalized
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+import { env } from "../../config/env-config.js";
 
 const client = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: env.OPENAI_API_KEY,
 });
 
 /**

@@ -5,6 +5,7 @@ import {generateAccessToken, generateRefreshToken} from "../services/jwt/jwtServ
 import User from "../models/User.js";
 import { signupFormSchema } from "@kanpeki/form-schemas";
 import {ZodError} from "zod";
+import { env } from "../config/env-config.js";
 
 /**
  * Handles creating a user's account, adding it to the MongoDB, and automatically logging the user in.
@@ -25,12 +26,13 @@ export async function signup(req, res){
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+            secure: env.NODE_ENV === "production",
+            sameSite: env.NODE_ENV === "production" ? "strict" : "lax",
         });
 
         res.status(201).json({ accessToken });
     } catch (error) {
+        console.log(error);
         if (error instanceof ZodError) {
             res.status(400).json({ error: `Account creation error: ${error.message}` });
         }
