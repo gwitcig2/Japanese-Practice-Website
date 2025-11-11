@@ -11,10 +11,5 @@ export default defineConfig([
         languageOptions: {
             globals: globals.node,
         },
-        rules: {
-            'n/no-missing-import': 'off',
-            'n/no-unsupported-features/es-syntax': 'off',
-            'n/no-process-env': 'off',
-        },
     },
 ])
