@@ -1,16 +1,10 @@
 import fs from 'fs';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-import path from "path";
-import { fileURLToPath } from "url";
 import Word from "../models/Word.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { env } from "../config/env-config.js";
 
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
-
-mongoose.connect(process.env.MONGO_URI).then(() => {
+mongoose.connect(env.MONGO_URI).then(() => {
     console.log('Connected to MongoDB');
     processJsonFile();
 }).catch(err => {

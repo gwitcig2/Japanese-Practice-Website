@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { env} from "../config/env-config.js";
 
 const paragraph_schema = new mongoose.Schema({
     paragraph: { type: String, required: true, unique: true },
@@ -45,7 +43,7 @@ const Paragraph = mongoose.model("Paragraph", paragraph_schema);
 
 async function addtoDB() {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect(env.MONGO_URI);
         await Paragraph.insertMany(paragraphs);
         console.log("Successfully added!");
         await mongoose.connection.close();
