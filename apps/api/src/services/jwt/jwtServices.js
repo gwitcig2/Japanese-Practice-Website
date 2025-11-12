@@ -78,11 +78,12 @@ export async function verifyRefreshToken(refreshToken) {
         const user = await User.findById(payload.userId);
         if (!user) return null;
 
-        const isValid = await Promise.any(
-            user.refreshTokens.map((hashed) => bcrypt.compare(refreshToken, hashed))
-        ).catch(() => false);
+        for (const hashed of user.refreshTokens) {
+            const match = await bcrypt.compare(refreshToken, hashed);
+            if (match) return payload;
+        }
 
-        return isValid ? payload : null;
+        return null;
 
     } catch {
         return null;

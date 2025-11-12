@@ -4,9 +4,8 @@ import { afterAll, describe, expect, test } from "vitest";
 
 import User from "../src/models/User.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 
-import { env } from "../src/config/env-config.js";
+import { validateJWTs } from "./sharedTests.js";
 
 let dbUser;
 let userId;
@@ -51,37 +50,10 @@ describe("Sessions routes", () => {
             })
             .expect(200);
 
-        // Checking if the user was given a valid access JWT
-        expect(res.body).toHaveProperty("accessToken");
+        await validateJWTs(dbUser, res);
 
-        const verifyAccess = jwt.verify(res.body.accessToken, env.ACCESS_KEY);
-        expect(verifyAccess).toBeDefined();
-        expect(verifyAccess.userId === dbUser._id.toString()).toBe(true);
+        refreshCookie = res.headers["set-cookie"].find(c => c.startsWith("refreshToken="));
 
-        // Verifying the un-hashed refresh JWT is in an HttpOnly cookie
-        const cookies = res.headers["set-cookie"];
-        expect(cookies).toBeDefined();
-
-        refreshCookie = cookies.find(c => c.startsWith("refreshToken="));
-        expect(refreshCookie).toBeDefined();
-
-        // Confirming that the refresh JWT has the expected key and is tied to the test user
-        const refreshToken = refreshCookie
-            .split(";")[0]
-            .split("=")[1];
-
-        const payload = jwt.verify(refreshToken, env.REFRESH_KEY);
-        expect(payload).toHaveProperty("userId");
-        expect(payload.userId === dbUser._id.toString()).toBe(true);
-
-        // Checking if the hashed refresh JWT was added to the user's refreshTokens array
-        expect(dbUser.refreshTokens).toBeInstanceOf(Array);
-        expect(dbUser.refreshTokens.length).toBeGreaterThan(0);
-
-        // Verifying that the hashed refresh JWT in the DB is equal to the real refresh JWT
-        expect(await bcrypt.compare(refreshToken, dbUser.refreshTokens[0])).toBe(true);
-
-        // Making the access JWT global so we can do unit tests with proper authorization for the other /users API requests
         jwtToken = res.body.accessToken;
 
     });
@@ -118,18 +90,18 @@ describe("Sessions routes", () => {
 
     });
 
-    test("PUT /sessions returns a new valid access JWT", async () => {
+    test("PUT /sessions returns a new valid access JWT and cycles the refresh JWT", async () => {
 
         const res = await request(app)
             .put("/sessions")
             .set("Cookie", refreshCookie.split(";")[0])
             .expect(200);
 
-        expect(res.body.accessToken).toBeDefined();
+       await validateJWTs(dbUser, res);
 
-        const verifyAccess = jwt.verify(res.body.accessToken, env.ACCESS_KEY);
-        expect(verifyAccess).toBeDefined();
-        expect(verifyAccess.userId === dbUser._id.toString()).toBe(true);
+        refreshCookie = res.headers["set-cookie"].find(c => c.startsWith("refreshToken="));
+
+        jwtToken = res.body.accessToken;
 
     });
 

@@ -2,10 +2,8 @@ import request from "supertest";
 import app from "../src/app.js";
 import User from "../src/models/User.js";
 import { afterAll, describe, expect, test } from "vitest";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 
-import { env } from "../src/config/env-config.js";
+import { validateJWTs } from "./sharedTests.js";
 
 const testUser = {
     email: "iAmTest@example.com",
@@ -42,39 +40,9 @@ describe("User authentication routes", () => {
 
         // Confirming if testUser's data was added to the database successfully
         dbUser = await User.findOne({ username: testUser.username });
-        expect(dbUser).toBeDefined();
 
-        // Checking if the user was given a valid access JWT
-        expect(res.body).toHaveProperty("accessToken");
+        await validateJWTs(dbUser, res);
 
-        const verifyAccess = jwt.verify(res.body.accessToken, env.ACCESS_KEY);
-        expect(verifyAccess).toBeDefined();
-        expect(verifyAccess.userId === dbUser._id.toString()).toBe(true);
-
-        // Verifying the un-hashed refresh JWT is in an HttpOnly cookie
-        const cookies = res.headers["set-cookie"];
-        expect(cookies).toBeDefined();
-
-        const refreshCookie = cookies.find(c => c.startsWith("refreshToken="));
-        expect(refreshCookie).toBeDefined();
-
-        // Confirming that the refresh JWT has the expected key and is tied to the test user
-        const refreshToken = refreshCookie
-            .split(";")[0]
-            .split("=")[1];
-
-        const payload = jwt.verify(refreshToken, env.REFRESH_KEY);
-        expect(payload).toHaveProperty("userId");
-        expect(payload.userId === dbUser._id.toString()).toBe(true);
-
-        // Checking if the hashed refresh JWT was added to the user's refreshTokens array
-        expect(dbUser.refreshTokens).toBeInstanceOf(Array);
-        expect(dbUser.refreshTokens.length).toBeGreaterThan(0);
-
-        // Verifying that the hashed refresh JWT in the DB is equal to the real refresh JWT
-        expect(await bcrypt.compare(refreshToken, dbUser.refreshTokens[0])).toBe(true);
-
-        // Making the access JWT global so we can do unit tests with proper authorization for the other /users API requests
         jwtToken = res.body.accessToken;
 
     });

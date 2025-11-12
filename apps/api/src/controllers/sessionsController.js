@@ -65,8 +65,17 @@ export async function handleRefresh(req, res){
         const payload = await verifyRefreshToken(refreshToken);
         if (!payload) return res.sendStatus(401);
 
+        await revokeRefreshToken(payload.userId, refreshToken);
+
         const newAccessToken = generateAccessToken(payload.userId);
-        return res.status(200).json({ accessToken: newAccessToken});
+        const newRefreshToken = await generateRefreshToken(payload.userId);
+
+        res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            secure: env.NODE_ENV === "production",
+            sameSite: env.NODE_ENV === "production" ? "strict" : "lax",
+        });
+        res.status(200).json({ accessToken: newAccessToken });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -87,10 +96,8 @@ export async function handleLogout(req, res){
         const refreshToken = req.cookies.refreshToken;
 
         if (refreshToken) {
-            const payload = jwt.decode(refreshToken);
-            if (payload) {
-                await revokeRefreshToken(payload.userId, refreshToken);
-            }
+            const payload = jwt.verify(refreshToken, env.REFRESH_KEY);
+            await revokeRefreshToken(payload.userId, refreshToken);
         }
 
         res.clearCookie("refreshToken");
@@ -100,6 +107,8 @@ export async function handleLogout(req, res){
         if (err.status) {
             res.status(err.status).json({ error: err.message });
         }
+
+        console.log(err.message);
 
         res.status(500).json({ error: err.message });
     }
