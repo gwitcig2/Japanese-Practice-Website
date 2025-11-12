@@ -16,8 +16,14 @@ export const apiEnvSchema = z.object({
         z.url() is good enough for verifying this variable contains a valid URI/URL, but
         a stricter measure would be to either pass it thru a regex or { parseUri } from mongodb-uri.
      */
-    MONGO_URI: z.url(),
+    MONGO_URI: z.url().optional(),
 
+}).refine((data) => {
+    if (data.NODE_ENV !== 'test') {
+        return data.MONGO_URI !== undefined && data.MONGO_URI.length > 0;
+    }
+
+    return true;
 });
 
 export type apiEnvVar = z.infer<typeof apiEnvSchema>;
