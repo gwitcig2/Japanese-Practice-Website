@@ -10,7 +10,7 @@ export const apiEnvSchema = z.object({
         Not sure if there would be a good way to sync the Vite port with this schema, but manually changing them
         around would take like 10 seconds max. So I dunno...
     */
-    CLIENT_ORIGIN: z.literal("http://localhost:5173"),
+    CLIENT_ORIGIN: z.literal("http://localhost:5173").optional(),
 
     /*
         z.url() is good enough for verifying this variable contains a valid URI/URL, but
@@ -20,7 +20,11 @@ export const apiEnvSchema = z.object({
 
 }).refine((data) => {
     if (data.NODE_ENV !== 'test') {
-        return data.MONGO_URI !== undefined && data.MONGO_URI.length > 0;
+
+        const isClientOriginDefined = data.CLIENT_ORIGIN !== undefined && data.CLIENT_ORIGIN.length > 0;
+        const isMongoUriDefined = data.MONGO_URI !== undefined && data.MONGO_URI.length > 0;
+
+        return isClientOriginDefined && isMongoUriDefined;
     }
 
     return true;
