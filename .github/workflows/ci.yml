@@ -12,6 +12,10 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      NODE_ENV: test
+      ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+      REFRESH_KEY: ${{ secrets.REFRESH_KEY }}
 
     steps:
       - name: Check out code
