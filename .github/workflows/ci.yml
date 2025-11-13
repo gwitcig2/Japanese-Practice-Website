@@ -37,18 +37,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Build
         run: pnpm build
-
-      - name: Remove stale MongoDB Memory Server cache
-        run: | 
-          rm -rf ~/.cache/mongodb-binaries 
-          mkdir -p ~/.cache/mongodb-binaries
 
       - name: Test
         run: pnpm --filter kanpeki-server test:ci
