@@ -49,11 +49,19 @@ export async function validateJWTs(dbUser, res) {
     expect(verifyRefresh.userId === dbUser._id.toString()).toBe(true);
 
     expect(dbUser.refreshTokens).toBeInstanceOf(Array);
-    expect(dbUser.refreshTokens.length).toBeGreaterThan(0);
+    expect(dbUser.refreshTokens).toHaveLength(1);
 
-    // We want this to be false to confirm the refreshToken stored in dbUser.refreshTokens[0] is hashed
-    expect(JSON.stringify(refreshToken) === JSON.stringify(dbUser.refreshTokens[0])).toBe(false);
+    expect(dbUser.refreshTokens[0]).toBeDefined();
+    expect(dbUser.refreshTokens[0].tokenHash).toBeDefined();
+    expect(typeof dbUser.refreshTokens[0].tokenHash === "string").toBe(true);
+    expect(dbUser.refreshTokens[0].expiresAt).toBeDefined();
+    expect(dbUser.refreshTokens[0].expiresAt).toBeInstanceOf(Date);
 
-    expect(await bcrypt.compare(refreshToken, dbUser.refreshTokens[0])).toBe(true);
+    const dbTokenHash = dbUser.refreshTokens[0].tokenHash;
+
+    // We want this to be false to confirm the refreshToken stored in dbUser.refreshTokens[0] is indeed hashed
+    expect(JSON.stringify(refreshToken) === JSON.stringify(dbTokenHash)).toBe(false);
+
+    expect(await bcrypt.compare(refreshToken, dbTokenHash)).toBe(true);
 
 }

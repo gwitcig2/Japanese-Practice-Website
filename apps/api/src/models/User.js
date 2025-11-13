@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { refreshTokenSchema } from "./RefreshToken.js";
 
 const userSchema = new mongoose.Schema({
     /**
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema({
      * expires.
      */
     refreshTokens: {
-        type: [String],
+        type: [refreshTokenSchema],
         default: []
     },
 }, { timestamps: true });

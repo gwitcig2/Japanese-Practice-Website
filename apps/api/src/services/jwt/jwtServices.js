@@ -6,6 +6,7 @@ import { env } from "../../config/env-config.js";
 
 const ACCESS_EXPIRES = "15m";
 const REFRESH_EXPIRES = "7d";
+const SECONDS_TO_MS = 1000;
 
 /**
  * Generates an access JWT for a user upon a successful signup or login.
@@ -30,8 +31,16 @@ export async function generateRefreshToken(userId) {
     const refreshToken = jwt.sign({ userId }, env.REFRESH_KEY, { expiresIn: REFRESH_EXPIRES });
     const hashed = await bcrypt.hash(refreshToken, 10);
 
+    const decoded = jwt.decode(refreshToken);
+    const expiresAt = new Date(decoded.exp * SECONDS_TO_MS);
+
     await User.findByIdAndUpdate(userId, {
-        $push: { refreshTokens: hashed }
+        $push: {
+            refreshTokens: {
+                tokenHash: hashed,
+                expiresAt: expiresAt,
+            }
+        }
     });
 
     return refreshToken;
@@ -55,7 +64,7 @@ export async function revokeRefreshToken(userId, refreshToken) {
     }
 
     const matches = await Promise.all(
-        user.refreshTokens.map((hashed) => bcrypt.compare(refreshToken, hashed))
+        user.refreshTokens.map((entry) => bcrypt.compare(refreshToken, entry.tokenHash))
     );
 
     user.refreshTokens = user.refreshTokens.filter((_, i) => !matches[i]);
@@ -74,13 +83,17 @@ export async function verifyRefreshToken(refreshToken) {
 
     try {
         const payload = jwt.verify(refreshToken, env.REFRESH_KEY);
-
         const user = await User.findById(payload.userId);
         if (!user) return null;
 
-        for (const hashed of user.refreshTokens) {
-            const match = await bcrypt.compare(refreshToken, hashed);
-            if (match) return payload;
+        for (const entry of user.refreshTokens) {
+            const match = await bcrypt.compare(refreshToken, entry.tokenHash);
+            if (match) {
+                if (entry.expiresAt && entry.expiresAt < new Date()) {
+                    return null;
+                }
+                return payload;
+            }
         }
 
         return null;
