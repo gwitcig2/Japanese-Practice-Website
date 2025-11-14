@@ -4,8 +4,7 @@ const parseProcessEnv = apiEnvSchema.safeParse(process.env);
 
 if (!parseProcessEnv.success) {
     console.log("The .env variables for /api are invalid:");
-    console.log(parseProcessEnv.error.issues);
-    throw new Error(parseProcessEnv.error.message);
+    throw new Error(parseProcessEnv.error);
 }
 
-export const env = parseProcessEnv.data;
+export const env = Object.freeze(parseProcessEnv.data);
