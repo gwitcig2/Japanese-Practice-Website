@@ -8,7 +8,7 @@
     "start": "node src/server.js",
     "lint": "eslint .",
     "test": "cross-env NODE_ENV=test dotenvx run -- vitest run",
-    "test:ci": "vitest run"
+    "test:ci": "vitest run --silent=passed-only"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.51.1",
