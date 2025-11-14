@@ -19,13 +19,12 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
+      - name: Add pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Cache turbo build setup
         uses: actions/cache@v4
@@ -36,9 +35,9 @@ jobs:
             ${{ runner.os }}-turbo-
 
       - name: Set up Node.js environment
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 'lts/*'
 
       - name: Install dependencies
         run: pnpm install
