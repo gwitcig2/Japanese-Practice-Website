@@ -10,7 +10,7 @@ import { addEnglishDefinitions } from "./toEnglish.js";
  *
  * @returns {Promise<{paragraph: string, tokens: *}>}
  */
-export async function setupReading(input) {
+export async function setupReading(/* input */) {
 
     const paragraph = await grabParagraphFromDB();
     const initTokens = await tokenize(paragraph);

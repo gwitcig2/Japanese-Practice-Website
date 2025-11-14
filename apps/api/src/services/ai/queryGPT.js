@@ -1,8 +1,8 @@
 import OpenAI from "openai";
-import { env } from "../../config/env-config.js";
+// import { env } from "../../config/env-config.js";
 
 const client = new OpenAI({
-    apiKey: env.OPENAI_API_KEY,
+    apiKey: /* env.OPENAI_API_KEY */ "placeholder",
 });
 
 /**

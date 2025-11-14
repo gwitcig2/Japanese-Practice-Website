@@ -1,5 +1,3 @@
-
-import mongoose from 'mongoose';
 // import { queryGPT } from "../ai/queryGPT.js";
 import Paragraph from "../../models/Paragraph.js";
 import { env } from "../../config/env-config.js";
@@ -27,9 +25,7 @@ export async function grabParagraphFromDB(/* params */) {
         { $sample: { size: 1 } }
     ]);
 
-    const result = query[0].paragraph;
-
-    return result;
+    return query[0].paragraph;
 
 }
 

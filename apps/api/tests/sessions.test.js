@@ -9,7 +9,6 @@ import { validateJWTs } from "./sharedTests.js";
 
 let dbUser;
 let userId;
-let jwtToken;
 let refreshCookie;
 
 const testUser = {
@@ -54,8 +53,6 @@ describe("Sessions routes", () => {
 
         refreshCookie = res.headers["set-cookie"].find(c => c.startsWith("refreshToken="));
 
-        jwtToken = res.body.accessToken;
-
     });
 
     test("POST /sessions returns code 400 if its given input doesn't follow the Zod schema's constraints", async () => {
@@ -97,11 +94,9 @@ describe("Sessions routes", () => {
             .set("Cookie", refreshCookie.split(";")[0])
             .expect(200);
 
-       await validateJWTs(dbUser, res);
+        await validateJWTs(dbUser, res);
 
         refreshCookie = res.headers["set-cookie"].find(c => c.startsWith("refreshToken="));
-
-        jwtToken = res.body.accessToken;
 
     });
 

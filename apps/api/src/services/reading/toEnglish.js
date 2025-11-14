@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import Word from "../../models/Word.js"
 import { KUROMOJI_TO_JMDICT } from "./constants/kuromojiToJMDict.js";
 

@@ -1,5 +1,4 @@
 import User from "../../models/User.js";
-import mongoose from "mongoose";
 
 /**
  * Removes a user from the DB given their `_id` from MongoDB. Authorization for this request

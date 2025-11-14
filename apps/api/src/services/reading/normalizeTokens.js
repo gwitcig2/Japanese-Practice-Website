@@ -1,6 +1,5 @@
 
-// import { queryGPT } from "./queryGPT.js";
-
+import { queryGPT } from "../ai/queryGPT.js";
 import { VALID_ICHIDAN_VERBS } from "./constants/validIchidanVerbs.js";
 import { AMBIGUOUS_VERB_FORMS } from "./constants/ambiguousVerbForms.js";
 
